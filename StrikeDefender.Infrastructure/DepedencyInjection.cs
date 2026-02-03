@@ -1,6 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Infrastructure.Common.Persistence.Data;
+using StrikeDefender.Infrastructure.Service.Auth;
+using StrikeDefender.Infrastructure.Service.FuzzzySearch;
+using StrikeDefender.Infrastructure.Users.Persistance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +22,14 @@ namespace StrikeDefender.Infrastructure
             return services
                 .AddPersistence()
                 .AddDatabaseConfig(configuration)
-                .AddIdentityConfig()
-                .AddAuthorizationConfig();
+                .AddIdentityConfig();
         }
 
         public static IServiceCollection AddPersistence(this IServiceCollection services)
         {
-            //services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
-            //services.AddScoped<IFuzzySearchRepository, FuzzySearchRepository>();
-            //services.AddScoped<TokenService, TokenService>();
-            //services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
+            services.AddScoped<IFuzzySearchRepository, FuzzySearchRepository>();
+            services.AddScoped<ITokenService, TokenService>();
             return services;
         }
         private static IServiceCollection AddDatabaseConfig(this IServiceCollection services, IConfiguration configuration)
@@ -33,24 +37,19 @@ namespace StrikeDefender.Infrastructure
             var connectionString = configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-            //services.AddDbContext<AppDbContext>(options =>
-            //    options.UseSqlServer(connectionString));
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
             return services;
         }
 
         private static IServiceCollection AddIdentityConfig(this IServiceCollection services)
         {
-            //services.AddIdentity<AppUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<AppDbContext>()
-            //    .AddDefaultTokenProviders();
+            services.AddIdentityCore<AppUser>()
+       .AddRoles<IdentityRole>()
+       .AddEntityFrameworkStores<AppDbContext>()
+       .AddDefaultTokenProviders();
 
-            return services;
-        }
-
-        private static IServiceCollection AddAuthorizationConfig(this IServiceCollection services)
-        {
-            services.AddAuthorization();
             return services;
         }
     }
