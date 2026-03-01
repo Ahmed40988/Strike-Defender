@@ -41,4 +41,8 @@ public static class SubscriptionErrors
         code: "Subscription.NoAccess",
         description: "You are not allowed to access this dataset");
 
+    public static Error SubscriptionRequired => Error.Validation(
+        code: "Subscription.Required",
+        description: "An active subscription is required to access this resource");
+
 }

@@ -2,6 +2,8 @@ using Serilog;
 using StrikeDefender.API;
 using StrikeDefender.Application;
 using StrikeDefender.Infrastructure;
+using StrikeDefender.Infrastructure.Common.Persistence.Data;
+using StrikeDefender.Infrastructure.Common.Persistence.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,13 @@ configuration.ReadFrom.Configuration(Context.Configuration)
 );
 var app = builder.Build();
 
+//Database seeding for plans, this is required for the application to work properly,
+//it will only seed if there are no plans in the database
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<StrikeDefenderDbContext>();
+    await PlanSeeder.SeedAsync(db);
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

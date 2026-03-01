@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Microsoft.AspNet.Identity;
 using Microsoft.EntityFrameworkCore;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
@@ -190,6 +191,13 @@ GetDatasetForUserAsync(string userId, RequestFilters filters, CancellationToken 
             return 0;
 
         return sub.Plan.MaxRiskScoreAccess;
+    }
+
+    public async Task<Subscription> FirstOrDefaultByUserIdAsync(string userId)
+    {
+        return await _db.Subscriptions
+            .Include(x => x.Plan)
+     .FirstOrDefaultAsync(x => x.UserId == userId && x.IsActive&& !x.Deleted);
     }
 }
 

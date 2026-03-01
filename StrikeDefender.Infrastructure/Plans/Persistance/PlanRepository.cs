@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ErrorOr;
+using Microsoft.EntityFrameworkCore;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
+using StrikeDefender.Application.Plans.PlansDTO;
 using StrikeDefender.Domain.Plans;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
 using System.Linq.Dynamic.Core;
@@ -8,7 +10,7 @@ using System.Linq.Dynamic.Core;
 namespace StrikeDefender.Infrastructure.Plans.Persistance;
 
 public class PlanRepository(StrikeDefenderDbContext dbContext)
-    : IGenericRepository<Plan>
+    : IGenericRepository<Plan>, IPlanRepository
 {
     private readonly StrikeDefenderDbContext _db = dbContext;
 
@@ -80,5 +82,31 @@ public class PlanRepository(StrikeDefenderDbContext dbContext)
             .Where(x => !x.Deleted && x.Name.ToLower().Contains(s))
             .AsNoTracking()
             .ToListAsync(ct);
+    }
+
+    public Task<Plan> GetByName(string name)
+    {
+      return _db.Planes.FirstOrDefaultAsync(x => x.Name == name && !x.Deleted);
+    }
+
+    public async Task<ErrorOr<List<PlanResponse>>> GetAvailablePlansAsync(CancellationToken ct = default)
+    {
+       var plans= await _db.Planes
+            .Where(x => !x.Deleted)
+            .OrderBy(x => x.Price)
+            .Select(x => new PlanResponse(
+                x.Id,
+                x.Name,
+                x.Price,
+                x.MaxAttacks,
+                x.MaxRules,
+                x.DurationInDays,
+                x.MaxRiskScoreAccess
+            ))
+            .AsNoTracking()
+            .ToListAsync(ct);
+        if (plans == null || plans.Count == 0)
+           return Error.NotFound("NoPlans", "No available plans found.");
+        return plans;
     }
 }

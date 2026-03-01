@@ -88,6 +88,18 @@ DateOnly dateOfBirth)
             foreach (var token in _refreshTokens)
                 token.Revoke();
         }
+
+        public void setSubscrition(Subscription subscription, string updatedById)
+        {
+            SubscriptionId = subscription.Id;
+            Touch(updatedById);
+        }
+        public void UpdateSubscription(Subscription subscription, string updatedById)
+        {
+            SubscriptionId = subscription.Id;  
+            Touch(updatedById);
+        }
+
     }
 }
 

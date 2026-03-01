@@ -36,7 +36,7 @@ namespace StrikeDefender.API.Controllers
             var query = new GetSecurityDatasetQuery(UserId, requestFilters);
             var result = _mediator.Send(query).Result;
             return result.Match(
-             _ => Ok(),
+             _ => Ok(_),
              errors => ToProblem(errors)
          );
 

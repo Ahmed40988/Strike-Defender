@@ -21,7 +21,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
         builder.Property(x => x.EndDate)
             .IsRequired();
 
-        builder.HasIndex(x => x.UserId);
+        builder.HasIndex(s => s.UserId).IsUnique(false);
         builder.HasIndex(x => x.IsActive);
         builder.HasIndex(x => x.Createdon);
 

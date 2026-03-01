@@ -1,7 +1,8 @@
-﻿using System.Security.Cryptography;
-
-using StrikeDefender.Application.Accounts.AccountDTO;
+﻿using StrikeDefender.Application.Accounts.AccountDTO;
+using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Domain.Subscriptions;
 using StrikeDefender.Domain.Users;
+using System.Security.Cryptography;
 using RefreshTokenEntity = StrikeDefender.Domain.RefreshTokens.RefreshToken;
 
 
@@ -9,12 +10,13 @@ namespace StrikeDefender.Application.Accounts.Commands.Login
 {
     public class LoginCommandHandler(
         UserManager<AppUser> userManager,
-        ITokenService tokenService
+        ITokenService tokenService,
+        IUnitOfWork unitOfWork
     ) : IRequestHandler<LoginCommand, ErrorOr<TokenDTO>>
     {
         private readonly UserManager<AppUser> _userManager = userManager;
         private readonly ITokenService _tokenService = tokenService;
-
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<ErrorOr<TokenDTO>> Handle(
             LoginCommand command,
             CancellationToken cancellationToken)
@@ -50,18 +52,18 @@ namespace StrikeDefender.Application.Accounts.Commands.Login
             );
 
             user.AddrefreshTokens(refreshToken);
+                await _userManager.UpdateAsync(user);
 
-            await _userManager.UpdateAsync(user);
+                return new TokenDTO
+                {
+                    UserId = user.Id,
+                    Token = jwt.Token,
+                    expiresIn = jwt.expiresIn,
+                    RefreshToken = refreshTokenValue,
+                    RefreshTokenExpiration = refreshTokenExpiration
+                };
 
-            return new TokenDTO
-            {
-                UserId = user.Id,
-                Token = jwt.Token,
-                expiresIn = jwt.expiresIn,
-                RefreshToken = refreshTokenValue,
-                RefreshTokenExpiration = refreshTokenExpiration
-            };
-
+            }
         }
     }
-}
+

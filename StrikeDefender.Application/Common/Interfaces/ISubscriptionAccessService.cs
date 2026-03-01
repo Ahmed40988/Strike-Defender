@@ -14,5 +14,6 @@ namespace StrikeDefender.Application.Common.Interfaces
         Task<ErrorOr<PaginatedList<SecurityEntryResponse>>>GetDatasetForUserAsync(string userId, RequestFilters filters, CancellationToken ct = default);
         Task<bool> HasActiveSubscriptionAsync(string userId);
         Task<int> GetUserMaxRiskScoreAsync(string userId);
+        Task<Subscription> FirstOrDefaultByUserIdAsync(string userId);
     }
 }
