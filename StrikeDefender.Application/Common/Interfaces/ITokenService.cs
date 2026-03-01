@@ -1,14 +1,12 @@
-﻿namespace StrikeDefender.Application.Common.Interfaces
+﻿using StrikeDefender.Domain.Users;
+
+namespace StrikeDefender.Application.Common.Interfaces
 {
     public interface ITokenService
     {
-        Task<(string Token, int ExpiresIn)> GenerateTokenAsync(
-            Guid domainUserId,
-            string email,
-            string userName,
-            IEnumerable<string> roles
-        );
+        Task<(string Token, int expiresIn)> GenerateTokenAsync(AppUser user, UserManager<AppUser> userManager);
+        string? ValidateAccessToken(string token);
+        string? GetUserIdFromExpiredToken(string token);
 
-        Guid? ValidateToken(string token);
     }
 }

@@ -1,21 +1,33 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StrikeDefender.Application.Common.Interfaces;
-using StrikeDefender.Infrastructure.Users.Persistance;
+using StrikeDefender.Domain.Attacks;
+using StrikeDefender.Domain.IntelligenceDataset;
+using StrikeDefender.Domain.Plans;
+using StrikeDefender.Domain.Rules;
+using StrikeDefender.Domain.Subscriptions;
+using StrikeDefender.Domain.Users;
+using System.Data;
 using System.Reflection;
 namespace StrikeDefender.Infrastructure.Common.Persistence.Data
 {
-    public class AppDbContext:IdentityDbContext<AppUser>,IUnitOfWork
+    public class StrikeDefenderDbContext:IdentityDbContext<AppUser>,IUnitOfWork
     {
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public StrikeDefenderDbContext(DbContextOptions<StrikeDefenderDbContext> options) : base(options)
         { }
 
         public async Task CommitChangesAsync()
         {
             await SaveChangesAsync();
         }
-      //  public DbSet<BaseCategory> BaseCategories => Set<BaseCategory>();
+    public DbSet<Attack> Attacks => Set<Attack>();
+    public DbSet<WafRule> wafRules => Set<WafRule>();
+    public DbSet<Plan> Planes => Set<Plan>();
+    public DbSet<Subscription> Subscriptions => Set<Subscription>();
+    public DbSet<SecurityIntelligenceEntry> securityIntelligenceEntries => Set<SecurityIntelligenceEntry>();
+    public DbSet<AttackResult> AttackResults => Set<AttackResult>();
+    public DbSet<SuccessfulAttack> SuccessfulAttacks => Set<SuccessfulAttack>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,3 +45,5 @@ namespace StrikeDefender.Infrastructure.Common.Persistence.Data
         }
     }
 }
+
+

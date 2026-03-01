@@ -1,6 +1,7 @@
 ﻿
 
-namespace StrikeDefender.Application.Common
+
+namespace StrikeDefender.Application.Common.Pagination
 {
     public record RequestFilters
     {

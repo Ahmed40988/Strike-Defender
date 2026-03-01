@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Domain.Users;
 using StrikeDefenders.Infrastructure.Service.Communication.Email;
 
 namespace StrikeDefender.Infrastructure.Service.Communication.Email;
@@ -41,31 +42,32 @@ public class EmailService(IOptions<MailSettings> mailSettings, ILogger<EmailServ
         smtp.Disconnect(true);
     }
 
-    public async Task SendResetPasswordEmail(string Email,string FullName, string OTP)
+    public async Task SendResetPasswordEmail(AppUser user, string OTP)
     {
 
         var emailBody = EmailBodyBuilder.GenerateEmailBody("ForgetPassword", templateModel: new Dictionary<string, string>
                 {
-                    { "{{name}}",FullName },
+                    { "{{name}}", user.FullName },
                     { "{{OTP}}", $"{OTP}" }
                 }
         );
 
-        await SendEmailAsync(Email!, "✅StrikeDefender: Change Password", emailBody);
+        await SendEmailAsync(user.Email!, "✅StrikeDefender: Change Password", emailBody);
 
         await Task.CompletedTask;
     }
 
-    public async Task SendConfirmationEmail(string Email, string FullName, string OTP)
+
+    public async Task SendConfirmationEmail(AppUser user, string OTP)
     {
 
         var emailBody = EmailBodyBuilder.GenerateEmailBody("EmailConfirmation", templateModel: new Dictionary<string, string>
                 {
-                { "{{name}}",FullName },
+                { "{{Name}}",user.FullName },
                 { "{{OTP}}", $"{OTP}" }
                 }
         );
-        await SendEmailAsync(Email!, "✅  StrikeDefender: Email Confirmation", emailBody);
+        await SendEmailAsync(user.Email!, "✅  StrikeDefender: Email Confirmation", emailBody);
 
         await Task.CompletedTask;
     }

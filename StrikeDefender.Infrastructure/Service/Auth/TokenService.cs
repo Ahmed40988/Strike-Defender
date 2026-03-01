@@ -1,92 +1,99 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Domain.Users;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using StrikeDefender.Application.Common.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
-namespace StrikeDefender.Infrastructure.Service.Auth
+namespace Web.Infrastructure.Service.Auth
 {
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly ILogger<TokenService> _logger;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, ILogger<TokenService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
-
-        public Task<(string Token, int ExpiresIn)> GenerateTokenAsync(
-            Guid domainUserId,
-            string email,
-            string userName,
-            IEnumerable<string> roles)
+        public async Task<(string Token, int expiresIn)> GenerateTokenAsync(AppUser user, UserManager<AppUser> userManager)
         {
-            var claims = new List<Claim>
-            {
-                new Claim("domainUserId", domainUserId.ToString()),
 
-                new Claim(ClaimTypes.Name, userName),
-                new Claim(ClaimTypes.Email, email)
+            _logger.LogInformation(
+    "SIGN KEY (GEN): {Key}",
+    Convert.ToBase64String(
+        Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!.Trim())
+    )
+);
+
+            var userClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
-            foreach (var role in roles)
+            var Roles = await userManager.GetRolesAsync(user);
+
+            foreach (var Role in Roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                userClaims.Add(new Claim(ClaimTypes.Role, Role));
             }
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!)
-            );
+            var authKeyInByets = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]!.Trim()));
 
-            var expiresInMinutes = int.Parse(_configuration["JWT:ExpiryMinutes"]!);
-
-            var token = new JwtSecurityToken(
+            var JwtObject = new JwtSecurityToken(
                 issuer: _configuration["JWT:Issuer"],
                 audience: _configuration["JWT:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(expiresInMinutes),
-                signingCredentials: new SigningCredentials(
-                    key,
-                    SecurityAlgorithms.HmacSha256
-                )
+                claims: userClaims,
+               expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:ExpiryMinutes"])),
+                signingCredentials: new SigningCredentials(authKeyInByets, SecurityAlgorithms.HmacSha256
+)
+            );
+            var expiresIn = int.Parse(_configuration["JWT:ExpiryMinutes"]);
+
+            return (token: new JwtSecurityTokenHandler().WriteToken(JwtObject), expiresIn: expiresIn * 60);
+        }
+
+        public string? ValidateAccessToken(string token)
+        {
+            return Validate(token, validateLifetime: true);
+        }
+
+        public string? GetUserIdFromExpiredToken(string token)
+        {
+            return Validate(token, validateLifetime: false);
+        }
+
+
+        private string? Validate(string token, bool validateLifetime)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!.Trim())
             );
 
-            return Task.FromResult((
-                new JwtSecurityTokenHandler().WriteToken(token),
-                expiresInMinutes * 60
-            ));
+            var principal = handler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+
+                ValidateIssuer = false,
+                ValidateAudience = false,
+
+                ValidateLifetime = validateLifetime,
+                ClockSkew = TimeSpan.Zero
+            }, out _);
+
+            return principal.Claims
+                .First(x => x.Type == ClaimTypes.NameIdentifier)
+                .Value;
         }
 
-        public Guid? ValidateToken(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]!);
-
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
-
-                var jwtToken = (JwtSecurityToken)validatedToken;
-
-                var domainUserIdClaim =
-                    jwtToken.Claims.FirstOrDefault(x => x.Type == "domainUserId");
-
-                return domainUserIdClaim is null
-                    ? null
-                    : Guid.Parse(domainUserIdClaim.Value);
-            }
-            catch
-            {
-                return null;
-            }
-        }
     }
 }

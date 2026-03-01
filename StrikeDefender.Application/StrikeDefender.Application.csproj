@@ -15,9 +15,15 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="MediatR" Version="14.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Accounts\Queries\" />
+    <Folder Include="Attacks\Queries\" />
+    <Folder Include="IntelligenceDatasets\Commands\" />
+    <Folder Include="Plans\Commands\" />
+    <Folder Include="Plans\Queries\" />
     <Folder Include="copy\Commands\" />
     <Folder Include="copy\Queries\" />
   </ItemGroup>

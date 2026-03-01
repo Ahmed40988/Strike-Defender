@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace StrikeDefender.Infrastructure.Service.Pagination
+namespace StrikeDefender.Application.Common.Pagination
 {
     public class PaginatedList<T>(List<T> items, int pageNumber, int count, int pageSize)
     {
