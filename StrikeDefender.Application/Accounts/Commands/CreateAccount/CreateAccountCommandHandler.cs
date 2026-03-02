@@ -45,6 +45,17 @@ namespace StrikeDefender.Application.Accounts.Commands.CreateAccount
                             description: e.Description))
                         .First();
                 }
+                var roleResult = await _userManager.AddToRoleAsync(Deleteduser, "User");
+
+                if (!roleResult.Succeeded)
+                {
+                    return roleResult.Errors
+                        .Select(e => Error.Failure(
+                            code: $"Role.{e.Code}",
+                            description: e.Description))
+                        .First();
+                }
+
                 var otp = new Random().Next(100000, 999999).ToString();
                 _memoryCache.Set($"EmailOTP_{Command.Email}", otp, TimeSpan.FromMinutes(5));
                 await _emailService.SendConfirmationEmail(Deleteduser, otp);
@@ -66,9 +77,19 @@ namespace StrikeDefender.Application.Accounts.Commands.CreateAccount
             var user = new AppUser(Command.Email);
             var result = await _userManager.CreateAsync(user, Command.Passsword);
 
-            if (result.Succeeded)
-            {
-                var otp = new Random().Next(100000, 999999).ToString();
+                if (result.Succeeded)
+                {
+                    var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
+                    if (!roleResult.Succeeded)
+                    {
+                        return roleResult.Errors
+                            .Select(e => Error.Failure(
+                                code: $"Role.{e.Code}",
+                                description: e.Description))
+                            .First();
+                    }
+                    var otp = new Random().Next(100000, 999999).ToString();
                 _memoryCache.Set($"EmailOTP_{Command.Email}", otp, TimeSpan.FromMinutes(5));
                 await _emailService.SendConfirmationEmail(user, otp);
                 return Result.Success;

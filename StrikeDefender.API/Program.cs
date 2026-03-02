@@ -23,11 +23,18 @@ var app = builder.Build();
 //it will only seed if there are no plans in the database
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<StrikeDefenderDbContext>();
-    await PlanSeeder.SeedAsync(db);
-}
+    var services = scope.ServiceProvider;
 
-app.UseSwagger();
+    var db = services.GetRequiredService<StrikeDefenderDbContext>();
+
+    // seed plans
+    await PlanSeeder.SeedAsync(db);
+
+    // seed roles ??
+    var roleSeeder = services.GetRequiredService<RoleSeeder>();
+    await roleSeeder.SeedAsync();
+}
+    app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Strike Defender v1");

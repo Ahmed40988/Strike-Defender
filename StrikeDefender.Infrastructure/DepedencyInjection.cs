@@ -40,6 +40,7 @@ namespace StrikeDefender.Infrastructure
         public static IServiceCollection AddPersistence(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<StrikeDefenderDbContext>());
+            services.AddScoped<RoleSeeder>();
             services.AddScoped<IFuzzySearchRepository, FuzzySearchRepository>();
             services.AddScoped<IFileHelperService, FileHelper>();
             services.AddScoped<ITokenService, TokenService>();
@@ -53,8 +54,8 @@ namespace StrikeDefender.Infrastructure
         }
         private static IServiceCollection AddDatabaseConfig(this IServiceCollection services, IConfiguration configuration)
         {
-           // var connectionString = configuration.GetConnectionString("DefaultConnection")
-      var connectionString = configuration.GetConnectionString("localhostConnection")
+        //var connectionString = configuration.GetConnectionString("DefaultConnection")
+                 var connectionString = configuration.GetConnectionString("localhostConnection")
                 ??
             throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
