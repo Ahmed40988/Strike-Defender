@@ -31,8 +31,8 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.User)
-            .WithOne(u => u.Subscription)
-            .HasForeignKey<Subscription>(x => x.UserId)
+            .WithMany() 
+            .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

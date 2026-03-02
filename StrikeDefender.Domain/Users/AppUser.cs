@@ -18,9 +18,7 @@ namespace StrikeDefender.Domain.Users
         public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
         public string? UpdatedByid { get; private set; }
         public DateTime? Updatedon { get; private set; }
-
         public Guid SubscriptionId { get; private set; }
-        public Subscription Subscription { get; private set; }
 
         private readonly List<RefreshToken> _refreshTokens = new();
         public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
