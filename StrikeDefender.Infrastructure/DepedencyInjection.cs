@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StrikeDefender.Application.Common.Authorization;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Domain.Plans;
 using StrikeDefender.Domain.Subscriptions;
@@ -16,11 +18,6 @@ using StrikeDefender.Infrastructure.Plans.Persistance;
 using StrikeDefender.Infrastructure.Service.FuzzzySearch;
 using StrikeDefender.Infrastructure.Services.Files;
 using StrikeDefender.Infrastructure.Subscriptions.Persistance;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Web.Infrastructure.Service.Auth;
 using Web.Infrastructure.Users.Persistence;
 
@@ -34,6 +31,7 @@ namespace StrikeDefender.Infrastructure
                 .AddPersistence()
                 .AddDatabaseConfig(configuration)
                 .AddIdentityConfig()
+                .AddAuthorizationConfig()
                 .AddAIServices(configuration);
         }
 
@@ -90,6 +88,27 @@ namespace StrikeDefender.Infrastructure
        .AddRoles<IdentityRole>()
        .AddEntityFrameworkStores<StrikeDefenderDbContext>()
        .AddDefaultTokenProviders();
+
+            return services;
+        }
+
+        private static IServiceCollection AddAuthorizationConfig(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+
+            services.AddAuthorization(options =>
+            {
+                var permissions = typeof(Permissions)
+                    .GetFields()
+                    .Select(f => f.GetValue(null)?.ToString());
+
+                foreach (var permission in permissions)
+                {
+                    options.AddPolicy(permission!, policy =>
+                        policy.Requirements.Add(
+                            new PermissionRequirement(permission!)));
+                }
+            });
 
             return services;
         }

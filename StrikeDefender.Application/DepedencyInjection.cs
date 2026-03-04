@@ -1,11 +1,7 @@
-﻿using FluentValidation;
+﻿
 using Microsoft.Extensions.DependencyInjection;
+using StrikeDefender.Application.Common.Authorization;
 using StrikeDefender.Application.Common.Behaviors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StrikeDefender.Application
 {
@@ -21,7 +17,12 @@ namespace StrikeDefender.Application
 
             services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
 
+
+       
+
             return services;
         }
+
+
     }
 }
