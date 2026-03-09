@@ -18,4 +18,7 @@ public interface IGenericRepository<T>
     Task<IReadOnlyList<T>> SearchAsync(
         string keyword,
         CancellationToken cancellationToken = default);
+
+    Task AddRangeAsync(IEnumerable<T> entities);
+
 }

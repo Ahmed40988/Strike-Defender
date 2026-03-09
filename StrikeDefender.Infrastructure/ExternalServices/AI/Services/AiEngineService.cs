@@ -5,7 +5,7 @@ using StrikeDefender.Infrastructure.ExternalServices.AI.Helpers;
 
 namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
 {
-    public class AiEngineService: IAiEngineService
+    public class AiEngineService : IAiEngineService
     {
         private readonly IAiProvider _provider;
         private readonly AiRateLimiter _rateLimiter;
@@ -78,9 +78,9 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
             }
         }
 
-    private async Task<ErrorOr<List<string>>> ExecuteWithRetry(
-            string prompt,
-            CancellationToken ct)
+        private async Task<ErrorOr<List<string>>> ExecuteWithRetry(
+                string prompt,
+                CancellationToken ct)
         {
             var retries = 3;
 
@@ -99,12 +99,11 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
                 }
             }
 
-          return Error.Failure(
-                    code: "AI.RetryLimit",
-                    description: "AI request failed after multiple attempts.");
+            return Error.Failure(
+                      code: "AI.RetryLimit",
+                      description: "AI request failed after multiple attempts.");
         }
 
     }
 
 }
-

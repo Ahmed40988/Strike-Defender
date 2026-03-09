@@ -93,4 +93,9 @@ public class SecurityIntelligenceRepository(StrikeDefenderDbContext dbContext)
             .AsNoTracking()
             .ToListAsync(ct);
     }
+
+    public async Task AddRangeAsync(IEnumerable<SecurityIntelligenceEntry> entities)
+    {
+       await _db.securityIntelligenceEntries.AddRangeAsync(entities);
+    }
 }

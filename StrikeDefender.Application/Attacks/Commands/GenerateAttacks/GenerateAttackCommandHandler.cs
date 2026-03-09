@@ -1,16 +1,25 @@
 ﻿using ErrorOr;
 using MediatR;
+using StrikeDefender.Application.Attacks.AttackDTO;
+using StrikeDefender.Application.Common.Helpers;
 using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Domain.Attacks;
 
 namespace StrikeDefender.Application.Attacks.Commands.GenerateAttacks
 {
-    public class GenerateAttackCommandHandler(IAiEngineService aiEngineService) : IRequestHandler<GenerateAttackCommand, ErrorOr<List<string>>>
+    public class GenerateAttackCommandHandler(
+      IAiEngineService aiEngineService,
+      IGenericRepository<Attack> attackRepository,
+      IUnitOfWork unitOfWork)
+      : IRequestHandler<GenerateAttackCommand, ErrorOr<List<AttackResponce>>>
     {
         private readonly IAiEngineService _aiEngineService = aiEngineService;
+        private readonly IGenericRepository<Attack> _attackRepository = attackRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<ErrorOr<List<string>>> Handle(
-           GenerateAttackCommand request,
-           CancellationToken cancellationToken)
+        public async Task<ErrorOr<List<AttackResponce>>> Handle(
+            GenerateAttackCommand request,
+            CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.Prompt))
             {
@@ -21,7 +30,36 @@ namespace StrikeDefender.Application.Attacks.Commands.GenerateAttacks
                 request.Prompt,
                 cancellationToken);
 
-            return response;
+            if (response.IsError)
+                return response.Errors;
+
+            var payloads = response.Value;
+
+            var attacksToAdd = new List<Attack>();
+
+            foreach (var payload in payloads)
+            {
+                var attackOrError = Attack.Create(payload, request.Type);
+
+                if (attackOrError.IsError)
+                    continue;
+
+                attacksToAdd.Add(attackOrError.Value);
+            }
+
+            if (attacksToAdd.Count > 0)
+            {
+                await _attackRepository.AddRangeAsync(attacksToAdd);
+                await _unitOfWork.CommitChangesAsync();
+            }
+
+            var result = attacksToAdd
+                .Select(a => new AttackResponce(
+                    a.Id,
+                    a.Payload))
+                .ToList();
+
+            return result;
         }
     }
-}
+    }

@@ -17,9 +17,6 @@ namespace StrikeDefender.Infrastructure.Attacks.Persistance
                    .IsRequired()
                    .HasMaxLength(5000);
 
-            builder.Property(x => x.Target)
-                   .IsRequired()
-                   .HasMaxLength(500);
 
             builder.HasOne(x => x.Rule)
                    .WithMany(r => r.Attacks)

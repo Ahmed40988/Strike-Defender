@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
 using StrikeDefender.Application.Plans.PlansDTO;
+using StrikeDefender.Domain.Attacks;
 using StrikeDefender.Domain.Plans;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
 using System.Linq.Dynamic.Core;
@@ -108,5 +109,10 @@ public class PlanRepository(StrikeDefenderDbContext dbContext)
         if (plans == null || plans.Count == 0)
            return Error.NotFound("NoPlans", "No available plans found.");
         return plans;
+    }
+
+    public async Task AddRangeAsync(IEnumerable<Plan> entities)
+    {
+        await _db.AddRangeAsync(entities);
     }
 }

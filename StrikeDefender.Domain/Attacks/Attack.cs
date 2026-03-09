@@ -10,14 +10,12 @@ public class Attack : BaseModel
     public Guid Id { get; private set; }
 
     public string Payload { get; private set; } = string.Empty;
-    public string Target { get; private set; } = string.Empty;
 
     public AttackType Type { get; private set; }
-    public SeverityLevel Severity { get; private set; }
 
     public bool IsSuccessful { get; private set; }
 
-    public Guid RuleId { get; private set; }
+    public Guid ?RuleId { get; private set; }
     public WafRule Rule { get; private set; } = default!;
 
 
@@ -25,23 +23,16 @@ public class Attack : BaseModel
 
     public static ErrorOr<Attack> Create(
         string payload,
-        string target,
-        AttackType type,
-        SeverityLevel severity)
+        AttackType type)
     {
         if (string.IsNullOrWhiteSpace(payload))
             return AttackErrors.PayloadRequired;
-
-        if (string.IsNullOrWhiteSpace(target))
-            return AttackErrors.TargetRequired;
 
         return new Attack
         {
             Id = Guid.NewGuid(),
             Payload = payload,
-            Target = target,
             Type = type,
-            Severity = severity,
             IsSuccessful = false
         };
     }
@@ -62,14 +53,12 @@ public class Attack : BaseModel
 
     public ErrorOr<Success> UpdatePayload(
         string payload,
-        SeverityLevel severity,
         string updatedById)
     {
         if (string.IsNullOrWhiteSpace(payload))
             return AttackErrors.PayloadRequired;
 
         Payload = payload;
-        Severity = severity;
 
         Touch(updatedById);
         return Result.Success;

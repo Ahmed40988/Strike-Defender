@@ -3,12 +3,13 @@ using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
 using StrikeDefender.Domain.Attacks;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core;
 
 namespace StrikeDefender.Infrastructure.Attacks.Persistance;
 
 public class AttackRepository(StrikeDefenderDbContext dbContext)
-    : IAttackRepository
+    :IGenericRepository<Attack>, IAttackRepository
 {
     private readonly StrikeDefenderDbContext _dbContext = dbContext;
 
@@ -61,7 +62,6 @@ public class AttackRepository(StrikeDefenderDbContext dbContext)
 
             query = query.Where(x =>
                 x.Payload.ToLower().Contains(search) ||
-                x.Target.ToLower().Contains(search) ||
                 x.Rule.RuleContent.ToLower().Contains(search));
         }
 
@@ -106,9 +106,35 @@ public class AttackRepository(StrikeDefenderDbContext dbContext)
             .Include(x => x.Rule)
             .Where(x => !x.Deleted &&
                        (x.Payload.ToLower().Contains(lower) ||
-                        x.Target.ToLower().Contains(lower) ||
                         x.Rule.RuleContent.ToLower().Contains(lower)))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
+
+
+    public async Task AddRangeAsync(IEnumerable<Attack> entities)
+    {
+        await _dbContext.AddRangeAsync(entities);
+    }
+
+   
+
+    public async Task<List<Attack>> GetByPayloadsAsync(
+    List<string> payloads,
+    CancellationToken cancellationToken)
+    {
+        return await _dbContext.Attacks
+            .Where(a => payloads.Contains(a.Payload) && !a.Deleted)
+            .ToListAsync(cancellationToken);
+    }
+    public async Task<List<Attack>> GetByIdsAsync(
+    List<Guid> Ids,
+    CancellationToken cancellationToken)
+    {
+        return await _dbContext.Attacks
+            .Where(a => Ids.Contains(a.Id) && !a.Deleted)
+            .ToListAsync(cancellationToken);
+    }
+
+
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace StrikeDefender.Application.Attacks.AttackDTO
 {
-    public class AttackResponce
-    {
-        
-    }
+    public record AttackResponce(
+    Guid Id,
+    string Payload
+);
 }

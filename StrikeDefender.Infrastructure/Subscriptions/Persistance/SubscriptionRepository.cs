@@ -199,5 +199,10 @@ GetDatasetForUserAsync(string userId, RequestFilters filters, CancellationToken 
             .Include(x => x.Plan)
      .FirstOrDefaultAsync(x => x.UserId == userId && x.IsActive&& !x.Deleted);
     }
+
+    public async Task AddRangeAsync(IEnumerable<Subscription> entities)
+    {
+      await _db.Subscriptions.AddRangeAsync(entities);
+    }
 }
 

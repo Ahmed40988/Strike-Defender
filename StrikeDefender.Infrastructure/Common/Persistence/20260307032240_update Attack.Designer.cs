@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
 
@@ -11,9 +12,11 @@ using StrikeDefender.Infrastructure.Common.Persistence.Data;
 namespace StrikeDefender.Infrastructure.Common.Persistence
 {
     [DbContext(typeof(StrikeDefenderDbContext))]
-    partial class StrikeDefenderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260307032240_update Attack")]
+    partial class updateAttack
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,7 +178,7 @@ namespace StrikeDefender.Infrastructure.Common.Persistence
                         .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RuleId")
+                    b.Property<Guid>("RuleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
@@ -650,7 +653,8 @@ namespace StrikeDefender.Infrastructure.Common.Persistence
                     b.HasOne("StrikeDefender.Domain.Rules.WafRule", "Rule")
                         .WithMany("Attacks")
                         .HasForeignKey("RuleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Rule");
                 });

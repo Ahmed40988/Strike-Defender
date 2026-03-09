@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
+using StrikeDefender.Domain.Attacks;
 using StrikeDefender.Domain.Rules;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
+using System.Data;
 using System.Linq.Dynamic.Core;
 
 namespace StrikeDefender.Infrastructure.Rules.Persistance;
@@ -78,5 +80,10 @@ public class RuleRepository(StrikeDefenderDbContext dbContext) : IGenericReposit
                         x.Description.ToLower().Contains(s)))
             .AsNoTracking()
             .ToListAsync(ct);
+    }
+
+    public async Task AddRangeAsync(IEnumerable<WafRule> entities)
+    {
+        await _db.AddRangeAsync(entities);
     }
 }

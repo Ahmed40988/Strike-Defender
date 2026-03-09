@@ -5,9 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StrikeDefender.Application.Common.Authorization;
 using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Domain.Attacks;
 using StrikeDefender.Domain.Plans;
 using StrikeDefender.Domain.Subscriptions;
 using StrikeDefender.Domain.Users;
+using StrikeDefender.Infrastructure.AttackResults.Persistance;
+using StrikeDefender.Infrastructure.Attacks.Persistance;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
 using StrikeDefender.Infrastructure.Common.Persistence.Seeding;
 using StrikeDefender.Infrastructure.ExternalServices.AI.Configurations;
@@ -18,6 +21,7 @@ using StrikeDefender.Infrastructure.Plans.Persistance;
 using StrikeDefender.Infrastructure.Service.FuzzzySearch;
 using StrikeDefender.Infrastructure.Services.Files;
 using StrikeDefender.Infrastructure.Subscriptions.Persistance;
+using StrikeDefender.Infrastructure.SuccessfulAttacks.Persistance;
 using Web.Infrastructure.Service.Auth;
 using Web.Infrastructure.Users.Persistence;
 
@@ -45,15 +49,19 @@ namespace StrikeDefender.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISubscriptionAccessService, SubscriptionRepository>();
             services.AddScoped<IPlanRepository, PlanRepository>();
+            services.AddScoped<IAttackRepository, AttackRepository>();
             services.AddScoped<IGenericRepository<Plan>, PlanRepository>();
+            services.AddScoped<IGenericRepository<Attack>, AttackRepository>();
+            services.AddScoped<IGenericRepository<AttackResult>, AttackResultRepository>();
+            services.AddScoped<IGenericRepository<SuccessfulAttack>, SuccessfulAttackRepository>();
             services.AddScoped<IGenericRepository<Subscription>, SubscriptionRepository>();
 
             return services;
         }
         private static IServiceCollection AddDatabaseConfig(this IServiceCollection services, IConfiguration configuration)
         {
-        //var connectionString = configuration.GetConnectionString("DefaultConnection")
-                 var connectionString = configuration.GetConnectionString("localhostConnection")
+       // var connectionString = configuration.GetConnectionString("DefaultConnection")
+                var connectionString = configuration.GetConnectionString("localhostConnection")
                 ??
             throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 

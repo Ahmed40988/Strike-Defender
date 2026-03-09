@@ -75,4 +75,9 @@ public class SuccessfulAttackRepository(StrikeDefenderDbContext dbContext) : IGe
             .AsNoTracking()
             .ToListAsync(ct);
     }
+
+    public async Task AddRangeAsync(IEnumerable<SuccessfulAttack> entities)
+    {
+      await _db.SuccessfulAttacks.AddRangeAsync(entities);
+    }
 }

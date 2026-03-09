@@ -1,14 +1,15 @@
 
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Dynamic.Core;
-using StrikeDefender.Domain.Attacks;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
+using StrikeDefender.Domain.Attacks;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
+using System.Linq.Dynamic.Core;
 
 namespace StrikeDefender.Infrastructure.AttackResults.Persistance;
 
-public class AttackResultRepository(StrikeDefenderDbContext dbContext) : IGenericRepository<AttackResult>
+public class AttackResultRepository(StrikeDefenderDbContext dbContext) :
+    IGenericRepository<AttackResult>
 {
     private readonly StrikeDefenderDbContext _db = dbContext;
 
@@ -72,4 +73,11 @@ public class AttackResultRepository(StrikeDefenderDbContext dbContext) : IGeneri
             .AsNoTracking()
             .ToListAsync(ct);
     }
+
+    public async Task AddRangeAsync(IEnumerable<AttackResult> entities)
+    {
+        await _db.AddRangeAsync(entities);
+    }
+
+
 }
