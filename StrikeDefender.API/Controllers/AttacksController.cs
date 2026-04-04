@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using StrikeDefender.Application.Attacks.AttackDTO;
 using StrikeDefender.Application.Attacks.Commands.GenerateAttacks;
 using StrikeDefender.Application.Attacks.Commands.StoreSuccessfulAttacks;
+using StrikeDefender.Application.Attacks.Queries.GetSuccessfulAttacks;
+using StrikeDefender.Application.Common.Pagination;
 using StrikeDefender.Domain.Common.Enums;
 using System.Text.Json;
 
@@ -55,6 +57,17 @@ namespace StrikeDefender.API.Controllers
                _ => Ok(),
                errors => ToProblem(errors));
         }
+
+        [HttpGet("Get_ccessful_Attacks")]
+        public async Task<IActionResult> GetSuccessfulAttacks([FromQuery]BaseFilters filters)
+        {
+            var query = new GetSuccessfulAttacksQuery(filters);
+            var result = await _mediator.Send(query);
+            return result.Match(
+                attacks => Ok(attacks),
+                errors => ToProblem(errors));
+        }
+
 
         string Prompt = "You are a cybersecurity dataset generator for training input validation models.\nYour task is to generate 50 synthetic SQL injection input strings for a MySQL/MariaDB target.\nTechnical Context:\nDatabase: MySQL / MariaDB only\nInjection point: GET parameter id inside single quotes → WHERE user_id = '$id'\nPayloads must start with ' to break out of the string context\nUNION-based payloads must return exactly 2 columns (matching first_name, last_name)\nUse MySQL comment syntax only: # or --  (with trailing space)\nAllowed functions: database(), version(), user(), SLEEP(), BENCHMARK(), information_schema\nDo NOT use SQL Server syntax: no xp_cmdshell, WAITFOR DELAY, or EXEC\nDo NOT include destructive queries: no DROP, DELETE, or UPDATE\nGeneration Rules:\nMix all SQLi styles: error-based, union-based, boolean-based, time-based, and stacked queries\nVary length and complexity: short, medium, and long payloads\nInclude realistic-looking and real working payloads\nNo duplicates\nGoals simulated:\nAuthentication bypass\nDatabase name and version extraction\nMetadata extraction via information_schema\nTime-based blind injection\nAttacker behavior simulation for testing and training\nOutput format:\nA single clean JSON array of exactly 50 strings\n No explanations, no comments, no markdown — raw JSON only\nNow generate the 50 synthetic SQL injection test patterns.";
    

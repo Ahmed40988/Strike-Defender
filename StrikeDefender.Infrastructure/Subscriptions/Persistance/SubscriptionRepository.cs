@@ -1,10 +1,10 @@
 ﻿using ErrorOr;
-using Microsoft.AspNet.Identity;
 using Microsoft.EntityFrameworkCore;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
 using StrikeDefender.Application.IntelligenceDatasets.IntelligenceDatasetsDTO;
 using StrikeDefender.Domain.IntelligenceDataset;
+using StrikeDefender.Domain.Plans;
 using StrikeDefender.Domain.Subscriptions;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
 using System.Linq.Dynamic.Core;
@@ -12,7 +12,7 @@ using System.Linq.Dynamic.Core;
 namespace StrikeDefender.Infrastructure.Subscriptions.Persistance;
 
 public class SubscriptionRepository(StrikeDefenderDbContext dbContext)
-    : IGenericRepository<Subscription>,ISubscriptionAccessService
+    : IGenericRepository<Subscription>, ISubscriptionAccessService
 {
     private readonly StrikeDefenderDbContext _db = dbContext;
 
@@ -203,6 +203,11 @@ GetDatasetForUserAsync(string userId, RequestFilters filters, CancellationToken 
     public async Task AddRangeAsync(IEnumerable<Subscription> entities)
     {
       await _db.Subscriptions.AddRangeAsync(entities);
+    }
+
+    public IQueryable<Subscription> Query()
+    {
+        return _db.Set<Subscription>().AsQueryable();
     }
 }
 

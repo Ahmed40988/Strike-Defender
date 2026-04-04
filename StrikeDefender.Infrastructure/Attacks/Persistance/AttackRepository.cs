@@ -93,6 +93,11 @@ public class AttackRepository(StrikeDefenderDbContext dbContext)
             filters.PageSize);
     }
 
+    public IQueryable<Attack> Query()
+    {
+        return _dbContext.Set<Attack>().AsQueryable();
+    }
+
     public async Task<IReadOnlyList<Attack>> SearchAsync(
         string keyword,
         CancellationToken cancellationToken = default)

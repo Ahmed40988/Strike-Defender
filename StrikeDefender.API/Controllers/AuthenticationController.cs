@@ -14,6 +14,7 @@ using StrikeDefender.Application.Accounts.Commands.RefreshToken;
 using StrikeDefender.Application.Accounts.Commands.ResendConfirmationEmail;
 using StrikeDefender.Application.Accounts.Commands.ResetPassword;
 using StrikeDefender.Application.Accounts.Commands.VerifyForgotPasswordOtp;
+using StrikeDefender.Application.Accounts.AccountDTO;
 using WStrikeDefendereb.Application.Accounts.AccountDTO;
 
 namespace StrikeDefender.APIs.Controllers

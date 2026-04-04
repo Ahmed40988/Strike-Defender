@@ -98,4 +98,9 @@ public class SecurityIntelligenceRepository(StrikeDefenderDbContext dbContext)
     {
        await _db.securityIntelligenceEntries.AddRangeAsync(entities);
     }
+
+    public IQueryable<SecurityIntelligenceEntry> Query()
+    {
+          return _db.Set<SecurityIntelligenceEntry>().AsQueryable();
+    }
 }

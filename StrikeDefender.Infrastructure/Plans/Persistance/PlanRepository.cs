@@ -115,4 +115,9 @@ public class PlanRepository(StrikeDefenderDbContext dbContext)
     {
         await _db.AddRangeAsync(entities);
     }
+
+    public IQueryable<Plan> Query()
+    {
+        return _db.Set<Plan>().AsQueryable();
+    }
 }

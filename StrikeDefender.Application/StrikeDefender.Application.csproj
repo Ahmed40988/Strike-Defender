@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Accounts\Queries\" />
-    <Folder Include="Attacks\Queries\" />
     <Folder Include="subscriptions\Queries\" />
     <Folder Include="IntelligenceDatasets\Commands\" />
     <Folder Include="Plans\Commands\" />

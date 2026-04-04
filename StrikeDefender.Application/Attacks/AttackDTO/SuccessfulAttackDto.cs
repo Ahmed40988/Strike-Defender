@@ -3,7 +3,6 @@
     public record SuccessfulAttackDto
     (
         Guid AttackId,
-        int SandboxId,
         string Payload,
         string Target,
         string Technique,

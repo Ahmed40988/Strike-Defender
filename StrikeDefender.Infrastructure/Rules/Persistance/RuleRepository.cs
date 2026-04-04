@@ -2,6 +2,7 @@
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Common.Pagination;
 using StrikeDefender.Domain.Attacks;
+using StrikeDefender.Domain.Plans;
 using StrikeDefender.Domain.Rules;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
 using System.Data;
@@ -85,5 +86,10 @@ public class RuleRepository(StrikeDefenderDbContext dbContext) : IGenericReposit
     public async Task AddRangeAsync(IEnumerable<WafRule> entities)
     {
         await _db.AddRangeAsync(entities);
+    }
+
+    public IQueryable<WafRule> Query()
+    {
+        return _db.Set<WafRule>().AsQueryable();
     }
 }

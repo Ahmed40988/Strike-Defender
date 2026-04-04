@@ -1,4 +1,5 @@
 ﻿using StrikeDefender.Application.Common.Pagination;
+using StrikeDefender.Domain.Attacks;
 
 namespace StrikeDefender.Application.Common.Interfaces;
 
@@ -15,10 +16,14 @@ public interface IGenericRepository<T>
         RequestFilters filters,
         CancellationToken cancellationToken = default);
 
+    IQueryable<T> Query();
+
     Task<IReadOnlyList<T>> SearchAsync(
         string keyword,
         CancellationToken cancellationToken = default);
 
     Task AddRangeAsync(IEnumerable<T> entities);
 
+
+   
 }

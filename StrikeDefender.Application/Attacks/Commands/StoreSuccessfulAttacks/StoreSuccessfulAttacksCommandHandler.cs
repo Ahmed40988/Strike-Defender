@@ -61,7 +61,10 @@ public class StoreSuccessfulAttacksCommandHandler(
                 attack,
                 result,
                 dto.Technique,
+                dto.Target,
+                dto.Severity,
                 "sandbox"
+
             );
 
             if (successfulOrError.IsError)
@@ -84,3 +87,5 @@ public class StoreSuccessfulAttacksCommandHandler(
         return Result.Success;
     }
 }
+
+

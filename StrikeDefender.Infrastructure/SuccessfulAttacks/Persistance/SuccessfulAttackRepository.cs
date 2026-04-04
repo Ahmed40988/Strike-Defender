@@ -60,6 +60,11 @@ public class SuccessfulAttackRepository(StrikeDefenderDbContext dbContext) : IGe
         return new PaginatedList<SuccessfulAttack>(items, filters.PageNumber, total, filters.PageSize);
     }
 
+    public  IQueryable<SuccessfulAttack> Query()
+    {
+        return  _db.Set<SuccessfulAttack>().AsQueryable();
+    }
+
     public async Task<IReadOnlyList<SuccessfulAttack>> SearchAsync(string keyword, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(keyword))
@@ -80,4 +85,6 @@ public class SuccessfulAttackRepository(StrikeDefenderDbContext dbContext) : IGe
     {
       await _db.SuccessfulAttacks.AddRangeAsync(entities);
     }
+
+
 }

@@ -79,5 +79,9 @@ public class AttackResultRepository(StrikeDefenderDbContext dbContext) :
         await _db.AddRangeAsync(entities);
     }
 
+    public IQueryable<AttackResult> Query()
+    {
+        return _db.Set<AttackResult>().AsQueryable();
 
+    }
 }

@@ -60,8 +60,8 @@ namespace StrikeDefender.Infrastructure
         }
         private static IServiceCollection AddDatabaseConfig(this IServiceCollection services, IConfiguration configuration)
         {
-       // var connectionString = configuration.GetConnectionString("DefaultConnection")
-                var connectionString = configuration.GetConnectionString("localhostConnection")
+     var connectionString = configuration.GetConnectionString("DefaultConnection")
+          //   var connectionString = configuration.GetConnectionString("localhostConnection")
                 ??
             throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 

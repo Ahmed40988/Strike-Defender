@@ -14,6 +14,8 @@ public class SuccessfulAttack : BaseModel
     public AttackResult AttackResult { get; private set; } = default!;
 
     public string BypassTechnique { get; private set; } = string.Empty;
+    public string Target { get; private set; } = string.Empty;
+    public string Severity { get; private set; } = string.Empty;
     public string Notes { get; private set; } = string.Empty;
 
     private SuccessfulAttack() { }
@@ -22,6 +24,8 @@ public class SuccessfulAttack : BaseModel
         Attack attack,
         AttackResult result,
         string bypassTechnique,
+        string target,
+        string severity,
         string notes)
     {
         if (attack is null)
@@ -38,6 +42,9 @@ public class SuccessfulAttack : BaseModel
             AttackResultId = result.Id,
             AttackResult = result,
             BypassTechnique = bypassTechnique ?? string.Empty,
+            Target = target ?? string.Empty,
+            Severity = severity ?? string.Empty,
+
             Notes = notes ?? string.Empty
         };
     }
