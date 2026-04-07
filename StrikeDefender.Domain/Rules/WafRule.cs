@@ -1,7 +1,8 @@
 ﻿using ErrorOr;
-using StrikeDefender.Domain.BaseModels;
 using StrikeDefender.Domain.Attacks;
+using StrikeDefender.Domain.BaseModels;
 using StrikeDefender.Domain.Common.Enums;
+using System.Data;
 
 namespace StrikeDefender.Domain.Rules;
 
@@ -10,7 +11,6 @@ public class WafRule : BaseModel
     public Guid Id { get; private set; }
 
     public string RuleContent { get; private set; } = string.Empty;
-    public string Description { get; private set; } = string.Empty;
 
     private readonly List<Attack> _attacks = new();
     public IReadOnlyCollection<Attack> Attacks => _attacks.AsReadOnly();
@@ -18,25 +18,27 @@ public class WafRule : BaseModel
     public RuleStatus Status { get; private set; }
 
     public int Version { get; private set; }
+    public ParsedWafRule? ParsedData { get; private set; }
 
     private WafRule() { }
 
     public static ErrorOr<WafRule> Create(
-        string ruleContent,
-        string description)
+        string ruleContent
+       )
     {
 
         if (string.IsNullOrWhiteSpace(ruleContent))
             return RuleErrors.ContentRequired;
 
-        return new WafRule
+        var rule =new WafRule
         {
             Id = Guid.NewGuid(),
             RuleContent = ruleContent,
-            Description = description ?? string.Empty,
             Status = RuleStatus.Generated,
             Version = 1
         };
+        rule.ParsedData = WafRuleParser.TryParse(ruleContent);
+        return rule;
     }
 
     public ErrorOr<Success> Activate(string updatedById)
@@ -55,14 +57,12 @@ public class WafRule : BaseModel
 
     public ErrorOr<Success> UpdateRule(
         string newContent,
-        string description,
         string updatedById)
     {
         if (string.IsNullOrWhiteSpace(newContent))
             return RuleErrors.ContentRequired;
 
         RuleContent = newContent;
-        Description = description ?? string.Empty;
         Version++;
 
         Touch(updatedById);

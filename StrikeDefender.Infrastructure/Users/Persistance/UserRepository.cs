@@ -32,6 +32,7 @@ namespace Web.Infrastructure.Users.Persistence
         public Task DeleteAsync(AppUser user, CancellationToken cancellationToken = default)
         {
             _dbContext.Users.Remove(user);
+            _dbContext.UserRoles.RemoveRange(_dbContext.UserRoles.Where(x => x.UserId == user.Id));
             return Task.CompletedTask;
         }
 

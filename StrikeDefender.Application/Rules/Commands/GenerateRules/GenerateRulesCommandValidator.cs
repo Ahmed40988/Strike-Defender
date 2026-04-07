@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrikeDefender.Application.Attacks.Commands.GenerateAttacks
+namespace StrikeDefender.Application.Rules.Commands.GenerateRules
 {
-    public class GenerateRulesCommandValidator:AbstractValidator<GenerateAttackCommand>
+    public class GenerateRulesCommandValidator:AbstractValidator<GenerateRulesCommand>
     {
         public GenerateRulesCommandValidator()
         {

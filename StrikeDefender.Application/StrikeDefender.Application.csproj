@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <Folder Include="Accounts\Queries\" />
+    <Folder Include="Dashboard\Commands\" />
+    <Folder Include="Rules\Queries\" />
     <Folder Include="subscriptions\Queries\" />
     <Folder Include="IntelligenceDatasets\Commands\" />
     <Folder Include="Plans\Commands\" />

@@ -48,8 +48,7 @@ public class RuleRepository(StrikeDefenderDbContext dbContext) : IGenericReposit
         {
             var s = filters.SearchValue.ToLower();
             query = query.Where(x =>
-                x.RuleContent.ToLower().Contains(s) ||
-                x.Description.ToLower().Contains(s));
+                x.RuleContent.ToLower().Contains(s) );
         }
 
         var total = await query.CountAsync(ct);
@@ -77,8 +76,7 @@ public class RuleRepository(StrikeDefenderDbContext dbContext) : IGenericReposit
 
         return await _db.wafRules
             .Where(x => !x.Deleted &&
-                       (x.RuleContent.ToLower().Contains(s) ||
-                        x.Description.ToLower().Contains(s)))
+                       (x.RuleContent.ToLower().Contains(s)))
             .AsNoTracking()
             .ToListAsync(ct);
     }

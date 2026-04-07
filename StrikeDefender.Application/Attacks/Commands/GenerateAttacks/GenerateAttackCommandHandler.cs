@@ -1,13 +1,9 @@
-﻿using ErrorOr;
-using MediatR;
-using StrikeDefender.Application.Attacks.AttackDTO;
-using StrikeDefender.Application.Common.Helpers;
-using StrikeDefender.Application.Common.Interfaces;
+﻿using StrikeDefender.Application.Attacks.AttackDTO;
 using StrikeDefender.Domain.Attacks;
 
 namespace StrikeDefender.Application.Attacks.Commands.GenerateAttacks
 {
-    public class GenerateAttackCommandHandler(
+    public class GenerateRulesCommandHandler(
       IAiEngineService aiEngineService,
       IGenericRepository<Attack> attackRepository,
       IUnitOfWork unitOfWork)

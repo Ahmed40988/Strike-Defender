@@ -41,4 +41,10 @@
     <ProjectReference Include="..\StrikeDefender.Infrastructure\StrikeDefender.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Templates\ForgetPassword.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

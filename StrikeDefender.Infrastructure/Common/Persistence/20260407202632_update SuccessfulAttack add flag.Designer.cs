@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StrikeDefender.Infrastructure.Common.Persistence.Data;
 
@@ -11,9 +12,11 @@ using StrikeDefender.Infrastructure.Common.Persistence.Data;
 namespace StrikeDefender.Infrastructure.Common.Persistence
 {
     [DbContext(typeof(StrikeDefenderDbContext))]
-    partial class StrikeDefenderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407202632_update SuccessfulAttack add flag")]
+    partial class updateSuccessfulAttackaddflag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

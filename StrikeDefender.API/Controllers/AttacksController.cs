@@ -1,6 +1,4 @@
-﻿using ErrorOr;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StrikeDefender.Application.Attacks.AttackDTO;
 using StrikeDefender.Application.Attacks.Commands.GenerateAttacks;
@@ -8,7 +6,6 @@ using StrikeDefender.Application.Attacks.Commands.StoreSuccessfulAttacks;
 using StrikeDefender.Application.Attacks.Queries.GetSuccessfulAttacks;
 using StrikeDefender.Application.Common.Pagination;
 using StrikeDefender.Domain.Common.Enums;
-using System.Text.Json;
 
 namespace StrikeDefender.API.Controllers
 {
@@ -58,7 +55,7 @@ namespace StrikeDefender.API.Controllers
                errors => ToProblem(errors));
         }
 
-        [HttpGet("Get_ccessful_Attacks")]
+        [HttpGet("Get_Successful_Attacks")]
         public async Task<IActionResult> GetSuccessfulAttacks([FromQuery]BaseFilters filters)
         {
             var query = new GetSuccessfulAttacksQuery(filters);

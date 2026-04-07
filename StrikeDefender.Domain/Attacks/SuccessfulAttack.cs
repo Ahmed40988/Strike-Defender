@@ -17,6 +17,7 @@ public class SuccessfulAttack : BaseModel
     public string Target { get; private set; } = string.Empty;
     public string Severity { get; private set; } = string.Empty;
     public string Notes { get; private set; } = string.Empty;
+    public bool IsBlocked { get; private set; }
 
     private SuccessfulAttack() { }
 

@@ -15,8 +15,6 @@ public class RuleConfiguration : IEntityTypeConfiguration<WafRule>
             .IsRequired()
             .HasMaxLength(4000);
 
-        builder.Property(x => x.Description)
-            .HasMaxLength(2000);
 
         builder.HasIndex(x => x.RuleContent);
         builder.HasIndex(x => x.Createdon);
