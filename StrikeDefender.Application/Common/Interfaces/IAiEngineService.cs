@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using StrikeDefender.Application.Rules.RuleDTO;
 using StrikeDefender.Domain.Attacks;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace StrikeDefender.Application.Common.Interfaces
       string prompt,
       CancellationToken ct = default);
         Task<ErrorOr<List<string>>> GenerateRulesAsync(
-    List<SuccessfulAttack> attacks,
+    List<AttackPayloadDto> attacks,
     string prompt,
     CancellationToken ct = default);
     }

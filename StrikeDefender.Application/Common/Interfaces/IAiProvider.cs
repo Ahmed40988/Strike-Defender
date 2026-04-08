@@ -9,6 +9,7 @@ namespace StrikeDefender.Application.Common.Interfaces
 {
     public interface IAiProvider
     {
+        string Name { get; } //logging
     Task<ErrorOr<List<string>>> SendAsync(
             string prompt,
             CancellationToken ct);

@@ -3,7 +3,7 @@ using StrikeDefender.Domain.Attacks;
 
 namespace StrikeDefender.Application.Attacks.Commands.GenerateAttacks
 {
-    public class GenerateRulesCommandHandler(
+    public class GenerateAttackCommandHandler(
       IAiEngineService aiEngineService,
       IGenericRepository<Attack> attackRepository,
       IUnitOfWork unitOfWork)

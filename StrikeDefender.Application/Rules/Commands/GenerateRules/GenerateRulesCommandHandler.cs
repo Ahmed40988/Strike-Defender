@@ -29,11 +29,13 @@ namespace StrikeDefender.Application.Rules.Commands.GenerateRules
                 return Error.Validation("Prompt", "Prompt cannot be empty");
 
             var attacks = await _attackRepository.Query()
-                .Where(a => !a.IsBlocked)
-                .OrderByDescending(a => a.AttackResult.Createdon)
-                .Take(5)
-                .Include(a => a.Attack)
-                .ToListAsync(cancellationToken);
+                 .Where(a => !a.IsBlocked)
+                 .OrderByDescending(a => a.AttackResult.Createdon)
+                 .Take(5)
+                   .Select(a => new AttackPayloadDto(
+                a.AttackId,
+                a.Attack.Payload))
+            .ToListAsync(cancellationToken);
 
             if (attacks.Count == 0)
                 return Error.NotFound("Attacks.NotFound", "No attacks available");
@@ -69,8 +71,8 @@ namespace StrikeDefender.Application.Rules.Commands.GenerateRules
             return new TestGenerationRules(
                 rulesDto,
                 attacks.Select(a => new AttackPayloadDto(
-                    a.AttackId,
-                    a.Attack.Payload)).ToList());
+                    a.Id,
+                    a.Payload)).ToList());
         }
 
 

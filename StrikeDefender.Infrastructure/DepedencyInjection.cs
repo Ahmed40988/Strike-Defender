@@ -74,21 +74,47 @@ namespace StrikeDefender.Infrastructure
             return services;
         }
 
-        public static IServiceCollection AddAIServices(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddAIServices(
+           this IServiceCollection services,
+           IConfiguration config)
         {
+            // 🔧 Options
             services.Configure<GeminiOptions>(
                 config.GetSection("Gemini"));
 
+            services.Configure<OpenRouterOptions>(
+                config.GetSection("OpenRouter"));
+
+            services.Configure<GroqOptions>(
+                config.GetSection("Groq"));
+
+            // ⚙️ Helpers
             services.AddSingleton<AiRateLimiter>();
             services.AddSingleton<AiUsageTracker>();
 
-            services.AddHttpClient<IAiProvider, GeminiProvider>(client =>
+            // 🌐 Http Clients (لكل Provider)
+            services.AddHttpClient<GeminiProvider>(c =>
             {
-                client.Timeout = TimeSpan.FromSeconds(60);
+                c.Timeout = TimeSpan.FromSeconds(60);
             });
 
-            services.AddScoped<IAiEngineService, AiEngineService>();
+            services.AddHttpClient<OpenRouterProvider>(c =>
+            {
+                c.Timeout = TimeSpan.FromSeconds(60);
+            });
+
+            services.AddHttpClient<GroqProvider>(c =>
+            {
+                c.Timeout = TimeSpan.FromSeconds(60);
+            });
+
+         
             services.AddScoped<IAiProvider, GeminiProvider>();
+            services.AddScoped<IAiProvider, OpenRouterProvider>();
+            services.AddScoped<IAiProvider, GroqProvider>();
+
+            
+            services.AddScoped<IAiEngineService, AiEngineService>();
 
             return services;
         }

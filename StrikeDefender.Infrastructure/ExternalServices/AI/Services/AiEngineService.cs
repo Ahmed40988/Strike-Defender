@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using Microsoft.Extensions.Logging;
 using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Application.Rules.RuleDTO;
 using StrikeDefender.Domain.Attacks;
 using StrikeDefender.Infrastructure.ExternalServices.AI.Helpers;
 
@@ -8,18 +9,23 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
 {
     public class AiEngineService : IAiEngineService
     {
-        private readonly IAiProvider _provider;
+        private readonly List<IAiProvider> _providers;
         private readonly AiRateLimiter _rateLimiter;
         private readonly AiUsageTracker _usage;
         private readonly ILogger<AiEngineService> _logger;
 
         public AiEngineService(
-            IAiProvider provider,
-            AiRateLimiter rateLimiter,
-            AiUsageTracker usage,
-            ILogger<AiEngineService> logger)
+       IEnumerable<IAiProvider> providers,
+       AiRateLimiter rateLimiter,
+       AiUsageTracker usage,
+       ILogger<AiEngineService> logger)
         {
-            _provider = provider;
+            _providers = providers
+                .OrderBy(p => p.Name == "Gemini" ? 0 :
+                              p.Name == "OpenRouter" ? 1 :
+                              2)
+                .ToList();
+
             _rateLimiter = rateLimiter;
             _usage = usage;
             _logger = logger;
@@ -81,7 +87,7 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
 
 
         public async Task<ErrorOr<List<string>>> GenerateRulesAsync(
-    List<SuccessfulAttack> attacks,
+    List<AttackPayloadDto> attacks,
     string prompt,
     CancellationToken ct = default)
         {
@@ -146,52 +152,67 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
             }
         }
         private async Task<ErrorOr<List<string>>> ExecuteWithRetry(
-                string prompt,
-                CancellationToken ct)
+      string prompt,
+      CancellationToken ct)
         {
-            var retries = 3;
-
-            for (int i = 0; i < retries; i++)
+            foreach (var provider in _providers)
             {
-                try
-                {
-                    return await _provider.SendAsync(prompt, ct);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(
-                        "AI try {Try} failed: {Msg}", i + 1, ex.Message);
+                var retries = 2;
 
-                    await Task.Delay(1500, ct);
+                for (int i = 0; i < retries; i++)
+                {
+                    try
+                    {
+                        _logger.LogInformation("Trying provider: {Provider}", provider.Name);
+
+                        var result = await provider.SendAsync(prompt, ct);
+
+                        if (!result.IsError && result.Value.Count > 0)
+                        {
+                            _logger.LogInformation("Success from: {Provider}", provider.Name);
+                            return result;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(
+                            "Provider {Provider} try {Try} failed: {Msg}",
+                            provider.Name,
+                            i + 1,
+                            ex.Message);
+                    }
+
+                    await Task.Delay(1000, ct);
                 }
+
+                _logger.LogWarning("Provider {Provider} exhausted, switching...", provider.Name);
             }
 
             return Error.Failure(
-                      code: "AI.RetryLimit",
-                      description: "AI request failed after multiple attempts.");
+                code: "AI.AllProvidersFailed",
+                description: "All AI providers failed.");
         }
 
 
 
-
-        private string BuildRulesPrompt(List<SuccessfulAttack> attacks, string basePrompt)
+        private string BuildRulesPrompt(List<AttackPayloadDto> attacks, string basePrompt)
         {
-            var attacksText = string.Join("\n", attacks.Select(a => a.Attack.Payload));
+            var attacksText = string.Join("\n", attacks.Select(a => a.Payload));
 
             return $@"
-{basePrompt}
+                {basePrompt}
 
-Generate ModSecurity WAF rules for the following attacks:
+            Generate ModSecurity WAF rules for the following attacks:
 
-{attacksText}
+            {attacksText}
 
-Rules format STRICT:
-- One rule per line
-- No extra spaces
-- Format EXACTLY like:
-SecRule ARGS ""@rx pattern"" ""id:xxxx,phase:2,deny,status:403,msg:'desc'""
-";
-        }
+            Rules format STRICT:
+            - One rule per line
+            - No extra spaces
+            - Format EXACTLY like:
+            SecRule ARGS ""@rx pattern"" ""id:xxxx,phase:2,deny,status:403,msg:'desc'""
+            ";
+                    }
 
         private string NormalizeRule(string rule)
         {

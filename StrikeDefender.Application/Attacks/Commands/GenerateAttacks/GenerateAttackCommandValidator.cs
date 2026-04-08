@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace StrikeDefender.Application.Attacks.Commands.GenerateAttacks
 {
-    public class GenerateRulesCommandValidator:AbstractValidator<GenerateAttackCommand>
+    public class GenerateAttackCommandValidator : AbstractValidator<GenerateAttackCommand>
     {
-        public GenerateRulesCommandValidator()
+        public GenerateAttackCommandValidator()
         {
             
         }
