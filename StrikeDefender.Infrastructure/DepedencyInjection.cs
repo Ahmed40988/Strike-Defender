@@ -5,7 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StrikeDefender.Application.Common.Authorization;
 using StrikeDefender.Application.Common.Interfaces;
+using StrikeDefender.Application.Payments.Commands.PaymentWebhook;
 using StrikeDefender.Domain.Attacks;
+using StrikeDefender.Domain.Payments;
 using StrikeDefender.Domain.Plans;
 using StrikeDefender.Domain.Rules;
 using StrikeDefender.Domain.Subscriptions;
@@ -18,6 +20,9 @@ using StrikeDefender.Infrastructure.ExternalServices.AI.Configurations;
 using StrikeDefender.Infrastructure.ExternalServices.AI.Helpers;
 using StrikeDefender.Infrastructure.ExternalServices.AI.Providers;
 using StrikeDefender.Infrastructure.ExternalServices.AI.Services;
+using StrikeDefender.Infrastructure.ExternalServices.Payment;
+using StrikeDefender.Infrastructure.ExternalServices.Payment.Helper;
+using StrikeDefender.Infrastructure.Payments.Persistence;
 using StrikeDefender.Infrastructure.Plans.Persistance;
 using StrikeDefender.Infrastructure.Rules.Persistance;
 using StrikeDefender.Infrastructure.Service.FuzzzySearch;
@@ -38,6 +43,7 @@ namespace StrikeDefender.Infrastructure
                 .AddDatabaseConfig(configuration)
                 .AddIdentityConfig()
                 .AddAuthorizationConfig()
+                .AddPaymentServices(configuration)
                 .AddAIServices(configuration);
         }
 
@@ -52,9 +58,12 @@ namespace StrikeDefender.Infrastructure
             services.AddScoped<ISubscriptionAccessService, SubscriptionRepository>();
             services.AddScoped<IPlanRepository, PlanRepository>();
             services.AddScoped<IAttackRepository, AttackRepository>();
+            services.AddScoped<ISuccessfulAttackRepository, SuccessfulAttackRepository>();
+            services.AddScoped<IRuleRepository, RuleRepository>();
             services.AddScoped<IGenericRepository<Plan>, PlanRepository>();
             services.AddScoped<IGenericRepository<Attack>, AttackRepository>();
             services.AddScoped<IGenericRepository<WafRule>, RuleRepository>();
+            services.AddScoped<IGenericRepository<ParsedWafRule>, ParsedWafRuleRepository>();
             services.AddScoped<IGenericRepository<AttackResult>, AttackResultRepository>();
             services.AddScoped<IGenericRepository<SuccessfulAttack>, SuccessfulAttackRepository>();
             services.AddScoped<IGenericRepository<Subscription>, SubscriptionRepository>();
@@ -64,7 +73,7 @@ namespace StrikeDefender.Infrastructure
         private static IServiceCollection AddDatabaseConfig(this IServiceCollection services, IConfiguration configuration)
         {
      var connectionString = configuration.GetConnectionString("DefaultConnection")
-          //   var connectionString = configuration.GetConnectionString("localhostConnection")
+         // var connectionString = configuration.GetConnectionString("localhostConnection")
                 ??
             throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -118,7 +127,26 @@ namespace StrikeDefender.Infrastructure
 
             return services;
         }
+        public static IServiceCollection AddPaymentServices(
+             this IServiceCollection services,
+             IConfiguration config)
+        {
+            // 🔧 1. Bind Settings
+            services.Configure<PaymobSettings>(
+                config.GetSection("Paymob"));
 
+            // 🌐 2. HttpClient (PaymentService)
+            services.AddHttpClient<IPaymentService, PaymentService>();
+
+            // 🧠 3. Helpers / Services
+            services.AddScoped<IPaymobTokenProvider, PaymobTokenProvider>();
+            services.AddScoped<IPaymobHmacValidator, PaymobHmacValidator>();
+
+            // 🗄️ 4. Repository
+            services.AddScoped<IPaymentTransactionRepository, PaymentRepository>();
+            services.AddScoped<IGenericRepository<PaymentTransaction>, PaymentRepository>();
+            return services;
+        }
         private static IServiceCollection AddIdentityConfig(this IServiceCollection services)
         {
             services.AddIdentityCore<AppUser>()

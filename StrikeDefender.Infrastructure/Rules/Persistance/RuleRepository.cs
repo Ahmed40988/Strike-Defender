@@ -10,7 +10,8 @@ using System.Linq.Dynamic.Core;
 
 namespace StrikeDefender.Infrastructure.Rules.Persistance;
 
-public class RuleRepository(StrikeDefenderDbContext dbContext) : IGenericRepository<WafRule>
+public class RuleRepository(StrikeDefenderDbContext dbContext) :
+    IGenericRepository<WafRule>, IRuleRepository
 {
     private readonly StrikeDefenderDbContext _db = dbContext;
 
@@ -89,5 +90,12 @@ public class RuleRepository(StrikeDefenderDbContext dbContext) : IGenericReposit
     public IQueryable<WafRule> Query()
     {
         return _db.Set<WafRule>().AsQueryable();
+    }
+
+    public  async Task<List<WafRule>> GetByIdsAsync(List<Guid> Ids, CancellationToken cancellationToken)
+    {
+        return await _db.wafRules
+               .Where(a => Ids.Contains(a.Id) && !a.Deleted)
+               .ToListAsync(cancellationToken);
     }
 }

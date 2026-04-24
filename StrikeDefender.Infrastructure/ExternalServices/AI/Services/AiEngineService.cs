@@ -1,9 +1,12 @@
 ﻿using ErrorOr;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StrikeDefender.Application.Common.Interfaces;
 using StrikeDefender.Application.Rules.RuleDTO;
 using StrikeDefender.Domain.Attacks;
+using StrikeDefender.Domain.Rules;
 using StrikeDefender.Infrastructure.ExternalServices.AI.Helpers;
+using System.Text.RegularExpressions;
 
 namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
 {
@@ -13,12 +16,16 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
         private readonly AiRateLimiter _rateLimiter;
         private readonly AiUsageTracker _usage;
         private readonly ILogger<AiEngineService> _logger;
+        private static int _ruleId;
+        private static bool _initialized = false;
+        private readonly IGenericRepository<ParsedWafRule> _rulesRepository;
+
 
         public AiEngineService(
        IEnumerable<IAiProvider> providers,
        AiRateLimiter rateLimiter,
        AiUsageTracker usage,
-       ILogger<AiEngineService> logger)
+       ILogger<AiEngineService> logger, IGenericRepository<ParsedWafRule> rulesRepository)
         {
             _providers = providers
                 .OrderBy(p => p.Name == "Gemini" ? 0 :
@@ -29,6 +36,7 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
             _rateLimiter = rateLimiter;
             _usage = usage;
             _logger = logger;
+            _rulesRepository = rulesRepository;
         }
 
         public async Task<ErrorOr<List<string>>> GenerateAttacksAsync(
@@ -96,6 +104,7 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
                     code: "AI.Attacks.Empty",
                     description: "Attacks list cannot be empty.");
 
+            await EnsureInitializedAsync();
             // daily limit
             if (!_usage.CanRequest())
                 return Error.Failure(
@@ -123,7 +132,7 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
 
       
                 var cleanedRules = result.Value
-                    .Select(NormalizeRule)
+                    .Select(NormalizeAndInjectId)
                     .ToList();
 
                 _usage.Increment();
@@ -214,9 +223,28 @@ namespace StrikeDefender.Infrastructure.ExternalServices.AI.Services
             ";
                     }
 
-        private string NormalizeRule(string rule)
+        private string NormalizeAndInjectId(string rule)
         {
-            return rule.Trim();
+            rule = rule.Trim();
+
+            var newId = Interlocked.Increment(ref _ruleId);
+
+            return Regex.Replace(rule, @"id:\d+", $"id:{newId}");
+        }
+
+        private async Task EnsureInitializedAsync()
+        {
+            if (_initialized)
+                return;
+
+            var hasAny = await _rulesRepository.Query().AnyAsync();
+
+            var maxId = hasAny
+                ? await _rulesRepository.Query().MaxAsync(r => r.RuleId)
+                : 1000000;
+
+            _ruleId = maxId;
+            _initialized = true;
         }
 
     }

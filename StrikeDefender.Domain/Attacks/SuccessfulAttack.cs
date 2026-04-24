@@ -68,4 +68,11 @@ public class SuccessfulAttack : BaseModel
         Restore(updatedById);
         return Result.Success;
     }
+
+    public ErrorOr<Success> MarkAsBlocked(string updatedById)
+    {
+        IsBlocked = true;
+        Touch(updatedById);
+        return Result.Success;
+    }
 }

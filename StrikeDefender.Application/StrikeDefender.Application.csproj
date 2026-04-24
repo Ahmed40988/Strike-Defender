@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Accounts\Queries\" />
+    <Folder Include="Payments\Queries\" />
     <Folder Include="Dashboard\Commands\" />
     <Folder Include="Rules\Queries\" />
     <Folder Include="subscriptions\Queries\" />

@@ -32,10 +32,10 @@ namespace StrikeDefender.Domain.Users
         }
 
         public void UpdateProfile(
-string fullName,
-string phone,
-DateOnly dateOfBirth)
-        {
+            string fullName,
+            string phone,
+            DateOnly dateOfBirth)
+                    {
             FullName = fullName;
             PhoneNumber = phone;
             DateOfBirth = dateOfBirth;

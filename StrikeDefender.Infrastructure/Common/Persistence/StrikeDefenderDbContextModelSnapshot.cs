@@ -375,6 +375,45 @@ namespace StrikeDefender.Infrastructure.Common.Persistence
                     b.ToTable("SecurityIntelligenceEntries", (string)null);
                 });
 
+            modelBuilder.Entity("StrikeDefender.Domain.Payments.PaymentTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Createdon")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedByid")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Updatedon")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("paymentTransactions");
+                });
+
             modelBuilder.Entity("StrikeDefender.Domain.Plans.Plan", b =>
                 {
                     b.Property<Guid>("Id")

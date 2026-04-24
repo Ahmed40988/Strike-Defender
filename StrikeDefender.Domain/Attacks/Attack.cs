@@ -76,12 +76,10 @@ public class Attack : BaseModel
         return Result.Success;
     }
 
-    public ErrorOr<Success> AssociateWithRule(WafRule rule, string updatedById)
+    public ErrorOr<Success> AssociateWithRule(Guid  ruleId, string updatedById)
     {
-        if (rule is null)
-            return AttackErrors.RuleRequired;
-            RuleId = rule.Id;
-            Rule = rule;
+
+            RuleId = ruleId;
             Touch(updatedById);
             return Result.Success;
     }

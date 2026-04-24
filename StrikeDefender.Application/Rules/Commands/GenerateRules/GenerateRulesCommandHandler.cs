@@ -38,7 +38,7 @@ namespace StrikeDefender.Application.Rules.Commands.GenerateRules
             .ToListAsync(cancellationToken);
 
             if (attacks.Count == 0)
-                return Error.NotFound("Attacks.NotFound", "No attacks available");
+                return Error.NotFound("Attacks.NotFound", "No attacks available for Block ");
             var aiResult = await _aiEngineService.GenerateRulesAsync(
                 attacks,
                 request.Prompt,
@@ -74,21 +74,5 @@ namespace StrikeDefender.Application.Rules.Commands.GenerateRules
                     a.Id,
                     a.Payload)).ToList());
         }
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
-
     }

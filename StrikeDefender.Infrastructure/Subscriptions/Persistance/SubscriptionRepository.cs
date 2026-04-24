@@ -114,12 +114,12 @@ GetDatasetForUserAsync(string userId, RequestFilters filters, CancellationToken 
 
         var maxRisk = sub.Plan.MaxRiskScoreAccess;
 
-        // 🔥 base query
+        
         var query = _db.securityIntelligenceEntries
             .Where(x => !x.Deleted && x.RiskScore <= maxRisk)
             .AsQueryable();
 
-        // 🔍 search
+       
         if (!string.IsNullOrEmpty(filters.SearchValue))
         {
             var s = filters.SearchValue.ToLower();
@@ -135,13 +135,13 @@ GetDatasetForUserAsync(string userId, RequestFilters filters, CancellationToken 
         if (total == 0)
             return SecurityIntelligenceEntryErrors.NoData;
 
-        // 🔽 sorting
+       
         if (!string.IsNullOrEmpty(filters.SortColumn))
             query = query.OrderBy(filters.SortColumn + " " + filters.SortDirection);
         else
             query = query.OrderByDescending(x => x.Createdon);
 
-        // 📄 pagination
+      
         if (filters.PageNumber > 0 && filters.PageSize > 0)
             query = query.Skip((filters.PageNumber - 1) * filters.PageSize)
                          .Take(filters.PageSize);

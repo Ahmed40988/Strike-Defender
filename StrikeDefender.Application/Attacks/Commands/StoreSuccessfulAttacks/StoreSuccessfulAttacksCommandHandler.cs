@@ -21,13 +21,11 @@ public class StoreSuccessfulAttacksCommandHandler(
         if (command.Attacks.Count == 0)
             return Result.Success;
 
-        // 1️⃣ جمع الـ Attack Ids
         var attackIds = command.Attacks
             .Select(a => a.AttackId)
             .Distinct()
             .ToList();
 
-        // 2️⃣ جلب الـ attacks من الداتابيز
         var attacks = await _attackRepository
             .GetByIdsAsync(attackIds, cancellationToken);
 
@@ -36,7 +34,6 @@ public class StoreSuccessfulAttacksCommandHandler(
         var resultsToAdd = new List<AttackResult>();
         var successfulToAdd = new List<SuccessfulAttack>();
 
-        // 3️⃣ إنشاء النتائج
         foreach (var dto in command.Attacks)
         {
             if (!attackDictionary.TryGetValue(dto.AttackId, out var attack))
@@ -76,7 +73,7 @@ public class StoreSuccessfulAttacksCommandHandler(
             attack.MarkAsSuccessful("sandbox");
         }
 
-        // 4️⃣ الحفظ
+
         if (resultsToAdd.Count > 0)
         {
             await _resultRepository.AddRangeAsync(resultsToAdd);

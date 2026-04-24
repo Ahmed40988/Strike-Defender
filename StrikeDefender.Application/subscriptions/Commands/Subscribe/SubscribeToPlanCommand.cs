@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace StrikeDefender.Application.subscriptions.Commands.Subscribe
 {
     public record SubscribeToPlanCommand(Guid PlanId, string UserId)
-        : IRequest<ErrorOr<Success>>;
+        : IRequest<ErrorOr<string>>;
 }

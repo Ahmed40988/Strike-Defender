@@ -34,7 +34,7 @@ namespace StrikeDefender.API.Controllers
                 new SubscribeToPlanCommand(planId, userId!));
 
             return result.Match(
-               _ => Ok(),
+               _ => Ok(_),
                errors => ToProblem(errors));
         }
 

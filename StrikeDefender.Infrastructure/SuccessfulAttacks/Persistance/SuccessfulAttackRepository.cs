@@ -8,7 +8,8 @@ using StrikeDefender.Infrastructure.Common.Persistence.Data;
 
 namespace StrikeDefender.Infrastructure.SuccessfulAttacks.Persistance;
 
-public class SuccessfulAttackRepository(StrikeDefenderDbContext dbContext) : IGenericRepository<SuccessfulAttack>
+public class SuccessfulAttackRepository(StrikeDefenderDbContext dbContext) 
+    : IGenericRepository<SuccessfulAttack>, ISuccessfulAttackRepository
 {
     private readonly StrikeDefenderDbContext _db = dbContext;
 
@@ -86,5 +87,12 @@ public class SuccessfulAttackRepository(StrikeDefenderDbContext dbContext) : IGe
       await _db.SuccessfulAttacks.AddRangeAsync(entities);
     }
 
-
+    public async Task<List<SuccessfulAttack>> GetByIdsAsync(
+        List<Guid> ids,
+        CancellationToken cancellationToken)
+    {
+        return await _db.SuccessfulAttacks
+            .Where(x => ids.Contains(x.AttackId))
+            .ToListAsync(cancellationToken);
+    }
 }

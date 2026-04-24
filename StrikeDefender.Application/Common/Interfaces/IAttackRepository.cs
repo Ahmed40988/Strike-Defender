@@ -3,7 +3,7 @@ using StrikeDefender.Domain.Attacks;
 
 namespace StrikeDefender.Application.Common.Interfaces;
 
-public interface IAttackRepository
+public interface IAttackRepository 
 {
 
     Task<List<Attack>> GetByIdsAsync(
