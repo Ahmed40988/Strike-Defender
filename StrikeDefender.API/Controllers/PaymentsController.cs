@@ -11,16 +11,13 @@ namespace StrikeDefender.API.Controllers
     public class PaymentsController(ISender sender) : ApiController
     {
         private readonly ISender _mediator = sender;
-
         [HttpPost("webhook")]
-        public async Task<IActionResult> HandleWebhook([FromBody] PaymobWebhookRequest request)
+        public async Task<IActionResult> HandleWebhook(
+            [FromBody] PaymobWebhookRequest request,
+            [FromQuery] string hmac)
         {
-            var result = await _mediator.Send(
-                new HandlePaymentWebhookCommand(request));
-
-            return result.Match(
-                _ => Ok(),
-                errors => ToProblem(errors));
+            return Ok(await _mediator.Send(
+                new HandlePaymentWebhookCommand(request, hmac)));
         }
     }
 }

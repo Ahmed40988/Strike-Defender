@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace StrikeDefender.Application.Payments.Commands.PaymentWebhook
 {
-    public record HandlePaymentWebhookCommand(PaymobWebhookRequest Data)
-        : IRequest<ErrorOr<Success>>;
+    public record HandlePaymentWebhookCommand(
+        PaymobWebhookRequest Data,
+        string Hmac
+    ) : IRequest<ErrorOr<Success>>;
 }

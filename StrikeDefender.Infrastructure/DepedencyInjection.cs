@@ -140,7 +140,7 @@ namespace StrikeDefender.Infrastructure
 
             // 🧠 3. Helpers / Services
             services.AddScoped<IPaymobTokenProvider, PaymobTokenProvider>();
-            services.AddScoped<IPaymobHmacValidator, PaymobHmacValidator>();
+            //services.AddScoped<IPaymobHmacValidator, PaymobHmacValidator>();
 
             // 🗄️ 4. Repository
             services.AddScoped<IPaymentTransactionRepository, PaymentRepository>();

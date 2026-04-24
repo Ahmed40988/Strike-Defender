@@ -6,19 +6,24 @@ using System.Threading.Tasks;
 
 namespace StrikeDefender.Application.Payments.DTO
 {
-    public record PaymobWebhookRequest(
-       string Type,
-       int OrderId,
-       bool Success,
-       decimal AmountCents,
-       string Hmac
-   );
+    public class PaymobWebhookRequest
+    {
+        public PaymobWebhookObj Obj { get; set; } = default!;
+    }
 
     public class PaymobWebhookObj
-        {
-            public int OrderId { get; set; }          
-            public bool Success { get; set; }        
-            public decimal AmountCents { get; set; }  
-            public string Hmac { get; set; } = string.Empty;
-        }
+    {
+        public int Id { get; set; } // transaction id
+
+        public bool Success { get; set; }
+
+        public int Amount_Cents { get; set; }
+
+        public PaymobOrder Order { get; set; } = default!;
     }
+
+    public class PaymobOrder
+    {
+        public int Id { get; set; } // ده المهم 👈 orderId
+    }
+}
