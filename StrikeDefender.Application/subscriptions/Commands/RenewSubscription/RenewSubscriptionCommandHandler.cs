@@ -1,41 +1,41 @@
-﻿using StrikeDefender.Domain.Subscriptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StrikeDefender.Application.subscriptions.Commands.RenewSubscription;
+using StrikeDefender.Domain.Plans;
+using StrikeDefender.Domain.Subscriptions;
 
-namespace StrikeDefender.Application.subscriptions.Commands.RenewSubscription
+public class RenewSubscriptionCommandHandler(
+    ISubscriptionAccessService subscriptionRepo,
+    IGenericRepository<Subscription> subscriptionGenericRepository,
+    IGenericRepository<Plan> planRepo,
+    IUserRepository userRepo,
+    IPaymentService paymentService)
+    : IRequestHandler<RenewSubscriptionCommand, ErrorOr<string>>
 {
-    public class RenewSubscriptionCommandHandler(ISubscriptionAccessService subscriptionRepo
-        , IUnitOfWork unitOfWork
-        , IGenericRepository<Subscription> SubscriptiongenericRepository)
-        : IRequestHandler<RenewSubscriptionCommand, ErrorOr<Success>>
+    private readonly ISubscriptionAccessService _subscriptionRepo = subscriptionRepo;
+    private readonly IGenericRepository<Subscription> _subscriptionGenericRepo = subscriptionGenericRepository;
+    private readonly IGenericRepository<Plan> _planRepo = planRepo;
+    private readonly IUserRepository _userRepo = userRepo;
+    private readonly IPaymentService _paymentService = paymentService;
+
+    public async Task<ErrorOr<string>> Handle(
+        RenewSubscriptionCommand request,
+        CancellationToken cancellationToken)
     {
-        private readonly ISubscriptionAccessService _subscriptionRepo = subscriptionRepo;
-        private readonly IGenericRepository<Subscription> _subscriptionGenericRepo = SubscriptiongenericRepository;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<ErrorOr<Success>> Handle(
-            RenewSubscriptionCommand request,
-            CancellationToken cancellationToken)
-        {
-            var sub = await _subscriptionRepo
-                .FirstOrDefaultByUserIdAsync(request.UserId);
+        var sub = await _subscriptionRepo
+            .FirstOrDefaultByUserIdAsync(request.UserId);
 
-            if (sub is null)
-                return SubscriptionErrors.NotFound;
+        if (sub is null)
+            return SubscriptionErrors.NotFound;
 
-            var plan = sub.Plan;
+        var user = await _userRepo.GetByIdAsync(request.UserId);
+        if (user is null)
+            return Error.NotFound("User.NotFound");
 
-            var renewResult = sub.Renew(plan, request.UserId);
+        var plan = await _planRepo.GetByIdAsync(sub.PlanId);
+        if (plan is null)
+            return Error.NotFound("Plan.NotFound");
 
-            if (renewResult.IsError)
-                return renewResult.Errors;
+        var paymentUrl = await _paymentService.ProcessPaymentAsync(user, plan);
 
-            await _subscriptionGenericRepo.UpdateAsync(sub, cancellationToken);
-            await _unitOfWork.CommitChangesAsync();
-
-            return Result.Success;
-        }
+        return paymentUrl;
     }
 }

@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace StrikeDefender.Application.subscriptions.Commands.UpgradeSubscription
 {
     public record UpgradeSubscriptionCommand(Guid NewPlanId, string UserId)
-        : IRequest<ErrorOr<Success>>;
+        : IRequest<ErrorOr<string>>;
 }

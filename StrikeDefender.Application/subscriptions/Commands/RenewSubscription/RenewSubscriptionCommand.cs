@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace StrikeDefender.Application.subscriptions.Commands.RenewSubscription
 {
     public record RenewSubscriptionCommand(string UserId)
-     : IRequest<ErrorOr<Success>>;
+     : IRequest<ErrorOr<string>>;
 }
