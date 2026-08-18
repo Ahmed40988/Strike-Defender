@@ -1,26 +1,118 @@
-# Strike Defender 🛡️
+<p align="center">
+  <img src="docs/images/features.png" width="100%" />
+</p>
 
-### AI-Powered Adaptive Firewall & Attack Intelligence Platform
+<h1 align="center">🛡️ Strike Defender</h1>
 
-Strike Defender is an intelligent cybersecurity platform designed to automatically discover, analyze, and defend against web application attacks using AI-driven attack generation, sandbox testing, and adaptive firewall rule creation.
+<p align="center">
+AI-Powered Adaptive Firewall & Attack Intelligence Platform
+</p>
 
-The system continuously learns from successful attacks and generates new security rules to strengthen protection against evolving threats.
+<p align="center">
+An Intelligent Cybersecurity Platform that combines Artificial Intelligence, Attack Automation, Sandbox Testing, and Adaptive Firewall Management to continuously improve web application security.
+</p>
 
 ---
 
-# 📌 Project Overview
+# 📌 Overview
 
-Strike Defender combines Artificial Intelligence, Cybersecurity Automation, and Adaptive Firewall Management into a unified platform.
+Strike Defender is a graduation project focused on building a self-improving cybersecurity platform capable of automatically discovering new attack techniques, testing them inside a controlled sandbox environment, analyzing successful attack patterns, and generating adaptive firewall rules using AI.
 
-The system automatically:
+The platform integrates AI, Cybersecurity Automation, Attack Intelligence, and Firewall Management into a single ecosystem capable of continuously strengthening security defenses against evolving threats.
 
-1. Generates attack payloads using AI.
-2. Executes attacks inside an isolated sandbox environment.
-3. Detects attacks that bypass current firewall protections.
-4. Analyzes successful attacks.
-5. Generates new firewall rules using AI.
-6. Updates the firewall configuration automatically.
-7. Stores attacks, rules, and analytics for monitoring and reporting.
+---
+
+# 🎯 Problem Statement
+
+Traditional firewalls rely heavily on manually written rules and periodic updates, making it difficult to react quickly to newly emerging attack patterns.
+
+Strike Defender addresses this challenge by introducing an AI-powered adaptive security workflow capable of:
+
+- Automatically generating attack payloads.
+- Detecting firewall weaknesses.
+- Learning from successful attacks.
+- Generating defensive firewall rules.
+- Continuously improving security posture.
+
+---
+
+# 🚀 Key Features
+
+## 🤖 AI-Powered Attack Generation
+
+Generate multiple attack payloads automatically using Large Language Models (LLMs).
+
+Supported attack categories include:
+
+- SQL Injection (SQLi)
+- Cross-Site Scripting (XSS)
+- Command Injection
+- Path Traversal
+- Prompt Injection
+- Authentication Bypass Attempts
+- Custom Attack Scenarios
+
+---
+
+## 🧪 Sandbox-Based Security Testing
+
+All generated attacks are executed inside an isolated environment containing:
+
+- Vulnerable Web Application
+- Vulnerable API Endpoints
+- Vulnerable Database
+- Firewall Layer
+- Monitoring Services
+
+This allows safe execution and validation without impacting production systems.
+
+---
+
+## 🔍 Attack Intelligence Engine
+
+The platform continuously collects:
+
+- Successful Attacks
+- Blocked Attacks
+- Attack Categories
+- Attack Frequency
+- Attack Trends
+- Rule Effectiveness
+
+The collected data is transformed into actionable security intelligence.
+
+---
+
+## 🔐 Adaptive Firewall Engine
+
+Instead of blocking attacks manually, the system automatically:
+
+- Detects successful attacks.
+- Groups similar attack patterns.
+- Requests AI-generated security rules.
+- Validates generated rules.
+- Updates firewall configurations.
+- Maintains rule history and versioning.
+
+---
+
+## ⚙️ Fully Automated Security Pipeline
+
+```text
+Generate Attacks
+       ↓
+Execute in Sandbox
+       ↓
+Collect Results
+       ↓
+Analyze Successful Attacks
+       ↓
+Generate Security Rules
+       ↓
+Update Firewall
+       ↓
+Store Analytics
+```
 
 ---
 
@@ -71,159 +163,119 @@ The system automatically:
 
 ---
 
-# 🎯 Core Objectives
-
-* Automate penetration testing workflows.
-* Discover firewall weaknesses.
-* Build self-improving security rules.
-* Reduce manual security operations.
-* Provide attack intelligence and analytics.
-* Improve web application protection continuously.
-
----
-
 # 🤖 AI Integration
 
-The platform integrates with Large Language Models (LLMs) to perform:
+The platform leverages AI in two primary areas:
 
-### Attack Generation
+## Attack Generation
 
-Generate multiple attack payloads including:
+AI generates diverse attack payloads designed to test firewall effectiveness.
 
-* SQL Injection (SQLi)
-* Cross-Site Scripting (XSS)
-* Prompt Injection
-* Command Injection
-* Path Traversal
-* Authentication Bypass Attempts
+### Example Categories
 
-### Rule Generation
-
-When attacks successfully bypass the firewall:
-
-* Successful attacks are collected.
-* Similar attacks are grouped.
-* AI generates generalized firewall rules.
-* Rules are reviewed and stored.
-* Firewall configurations are updated.
+- SQL Injection
+- XSS
+- Prompt Injection
+- Authentication Bypass
+- Command Injection
+- Custom Security Scenarios
 
 ---
 
-# 🔐 Adaptive Firewall Engine
+## Firewall Rule Generation
 
-The firewall continuously evolves based on attack outcomes.
+When attacks bypass the firewall:
 
-### Responsibilities
+1. Successful attacks are collected.
+2. Similar attacks are grouped.
+3. AI generates generalized protection rules.
+4. Rules are validated.
+5. Firewall configurations are updated.
 
-* Store generated rules.
-* Validate generated rules.
-* Apply rules to firewall configuration.
-* Prevent duplicate rules.
-* Track rule effectiveness.
-* Maintain rule history.
-
----
-
-# 🧪 Sandbox Environment
-
-All generated attacks are executed inside an isolated testing environment.
-
-### Components
-
-* Vulnerable Web Application
-* Vulnerable API Endpoints
-* Test Database
-* Firewall Layer
-* Monitoring Service
-
-### Purpose
-
-* Safe attack execution.
-* Firewall effectiveness testing.
-* Attack success tracking.
-* Data collection for AI analysis.
+This allows the system to evolve automatically over time.
 
 ---
 
-# ⚙️ Automation Pipeline
+# 🧠 Attack Analysis & Intelligence
 
-The entire workflow is automated.
+The platform processes attack data through multiple stages:
 
-```text
-Generate Attacks
-       ↓
-Execute in Sandbox
-       ↓
-Collect Results
-       ↓
-Analyze Successful Attacks
-       ↓
-Generate New Rules
-       ↓
-Update Firewall
-       ↓
-Store Analytics
-```
+### Collection
 
----
+- Capture successful attacks
+- Store payload metadata
+- Track execution results
 
-# 📊 Attack Analytics & Intelligence
+### Filtering
 
-The platform collects and analyzes:
+- Remove duplicates
+- Group similar patterns
+- Categorize attack types
 
-* Successful attacks
-* Blocked attacks
-* Attack categories
-* Attack frequency
-* Rule effectiveness
-* Firewall performance
-* AI-generated rule history
+### Analysis
+
+- Measure attack frequency
+- Evaluate firewall weaknesses
+- Calculate rule effectiveness
+
+### Reporting
+
+- Dashboard Analytics
+- Security Reports
+- Trend Monitoring
 
 ---
 
-# 🖥️ Dashboard Features
+# 🖥️ Administration Dashboard
 
-The administration dashboard provides:
+The platform includes a comprehensive administration dashboard.
 
-### Security Monitoring
+## Security Monitoring
 
-* Live attack monitoring
-* Firewall statistics
-* Security reports
-* Rule management
+- Live Attack Monitoring
+- Firewall Statistics
+- Security Reports
+- Threat Insights
 
-### Attack Intelligence
+---
 
-* Attack history
-* Attack categories
-* Successful attack analysis
-* Generated payload review
+## Attack Intelligence
 
-### Rule Management
+- Attack History
+- Successful Attack Analysis
+- Attack Categories
+- Payload Review
 
-* Generated rules
-* Rule approval
-* Rule activation
-* Rule versioning
+---
 
-### System Administration
+## Firewall Management
 
-* User management
-* Logs management
-* AI activity tracking
-* Sandbox monitoring
+- Generated Rules
+- Rule Approval
+- Rule Activation
+- Rule Versioning
+- Rule Effectiveness Tracking
+
+---
+
+## System Administration
+
+- User Management
+- Activity Logs
+- AI Monitoring
+- Sandbox Monitoring
 
 ---
 
 # 🌐 Public Website
 
-The platform includes a public website where organizations can:
+The project includes a public-facing website where organizations can:
 
-* Learn about the platform.
-* Purchase firewall protection.
-* Access security services.
-* View product information.
-* Contact the security team.
+- Learn about Strike Defender
+- Explore security solutions
+- Purchase firewall services
+- Request consultations
+- Contact the cybersecurity team
 
 ---
 
@@ -231,109 +283,154 @@ The platform includes a public website where organizations can:
 
 ## Backend
 
-* ASP.NET Core
-* Clean Architecture
-* CQRS
-* MediatR
-* Entity Framework Core
-* SQL Server
-* FluentValidation
-* JWT Authentication
-* Rate Limiting
-
-## AI & Automation
-
-* LLM Integration
-* Prompt Engineering
-* Automated Attack Generation
-* Automated Rule Generation
-
-## Cybersecurity
-
-* Adaptive Firewall Engine
-* Sandbox Execution
-* Attack Analysis
-* Security Monitoring
-
-## Dashboard
-
-* REST APIs
-* Role-Based Authorization
-* Analytics & Reporting
+- ASP.NET Core
+- Clean Architecture
+- CQRS
+- MediatR
+- Entity Framework Core
+- SQL Server
+- FluentValidation
+- JWT Authentication
+- Refresh Tokens
+- Rate Limiting
 
 ---
 
-# 🚀 Key Backend Contributions
+## AI & Automation
 
-### AI Workflow Integration
+- LLM Integration
+- Prompt Engineering
+- Automated Attack Generation
+- Automated Rule Generation
+- Workflow Automation
 
-* Built API integrations with AI services.
-* Automated attack generation requests.
-* Customized AI responses.
-* Generated firewall rule requests dynamically.
+---
 
-### Cybersecurity Automation
+## Cybersecurity
 
-* Automated attack execution workflows.
-* Integrated sandbox communication APIs.
-* Managed attack processing pipelines.
+- Adaptive Firewall Engine
+- Sandbox Execution
+- Attack Intelligence
+- Threat Analysis
+- Security Monitoring
 
-### Attack Analysis Engine
+---
 
-* Processed successful attacks.
-* Applied filtering and categorization.
-* Stored attack intelligence data.
-* Prepared analytics for dashboard reporting.
+## Dashboard
 
-### Performance Optimization
+- REST APIs
+- Role-Based Authorization
+- Reporting & Analytics
 
-* Implemented Rate Limiting on generation endpoints.
-* Protected AI quotas.
-* Prevented abuse and excessive requests.
+---
+
+# 👨‍💻 Backend Contributions
+
+### 🤖 AI Workflow Integration
+
+- Built API integrations with AI services.
+- Automated attack generation workflows.
+- Customized AI responses for security processing.
+- Implemented dynamic rule-generation requests.
+
+---
+
+### ⚙️ Security Automation
+
+- Developed automated attack orchestration workflows.
+- Integrated sandbox communication APIs.
+- Automated attack execution and validation pipelines.
+
+---
+
+### 🔍 Attack Analysis Engine
+
+- Processed successful attacks.
+- Implemented filtering and categorization mechanisms.
+- Stored attack intelligence for future analysis.
+- Prepared analytics data for reporting dashboards.
+
+---
+
+### 🚀 Performance Optimization
+
+- Implemented Rate Limiting on generation endpoints.
+- Protected AI quotas and resources.
+- Prevented abuse and excessive request traffic.
 
 ---
 
 # 📷 System Screenshots
 
-## ERD
+## 🏗️ System Architecture Flow
 
-> Add ERD Diagram Here
-
-![ERD](docs/images/erd.png)
+<img src="docs/images/Flow1.png" width="100%" />
 
 ---
 
-## Swagger Documentation
+## 🚀 Platform Features
 
-> Add Swagger Screenshots Here
-
-![Swagger-1](docs/images/swagger1.png)
-
-![Swagger-2](docs/images/swagger2.png)
-
-![Swagger-3](docs/images/swagger3.png)
+<img src="docs/images/features.png" width="100%" />
 
 ---
 
-## Dashboard
+## 📑 API Documentation (Swagger)
 
-> Add Dashboard Screenshots Here
-
-![Dashboard](docs/images/dashboard.png)
+<table>
+<tr>
+<td width="33%">
+<img src="docs/images/swagger1.png"/>
+</td>
+<td width="33%">
+<img src="docs/images/swagger2.png"/>
+</td>
+<td width="33%">
+<img src="docs/images/swagger3.png"/>
+</td>
+</tr>
+</table>
 
 ---
 
-## Analytics
+## 🖥️ Dashboard & Management System
 
-> Add Analytics Screenshots Here
+<table>
+<tr>
+<td width="33%">
+<img src="docs/images/UI1.jpeg"/>
+</td>
+<td width="33%">
+<img src="docs/images/UI2.jpeg"/>
+</td>
+<td width="33%">
+<img src="docs/images/UI3.jpeg"/>
+</td>
+</tr>
+</table>
 
-![Analytics](docs/images/analytics.png)
+---
+
+# 📈 Future Enhancements
+
+- Multi-Firewall Support
+- Automated Rule Validation Engine
+- AI-Based Threat Scoring
+- SIEM Integration
+- Threat Intelligence Feeds
+- Cloud Deployment Support
+- Security Alerting System
+
+---
+
+# 👨‍🎓 Graduation Project
+
+Faculty of Computers & Artificial Intelligence
+
+Graduation Project 2026
 
 ---
 
 # 👨‍💻 Team
-
-Graduation Project — Faculty of Computers & Artificial Intelligence
 
 Backend Developer: **Ahmed Momtaz**
 
@@ -341,4 +438,4 @@ Backend Developer: **Ahmed Momtaz**
 
 # 📄 License
 
-This project was developed for educational and graduation purposes. It demonstrates the integration of AI, Cybersecurity Automation, Adaptive Firewalls, and Modern Backend Engineering principles.
+This project was developed for educational and graduation purposes and demonstrates practical integration between Artificial Intelligence, Cybersecurity Automation, Adaptive Firewalls, and Modern Backend Engineering principles.
