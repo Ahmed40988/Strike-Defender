@@ -1,7 +1,6 @@
 <p align="center">
-  <img src="docs/images/features.png" width="100%" />
+  <img src="docs/images/logo.png" width="180" />
 </p>
-
 <h1 align="center">🛡️ Strike Defender</h1>
 
 <p align="center">
@@ -351,6 +350,28 @@ The project includes a public-facing website where organizations can:
 - Prepared analytics data for reporting dashboards.
 
 ---
+---
+
+### 💳 Payment & Subscription Management
+
+#### Paymob Integration
+
+- Integrated **Paymob Payment Gateway** to support purchasing firewall subscriptions and cybersecurity services.
+- Built secure payment workflows for checkout, transaction creation, and payment verification.
+- Managed payment lifecycle tracking and order status synchronization.
+
+#### Webhook Processing
+
+- Implemented secure webhook endpoints for asynchronous payment updates.
+- Handled payment confirmation, failure scenarios, and subscription activation.
+- Added validation mechanisms to prevent duplicate transaction processing.
+
+#### Reliability & Protection
+
+- Applied **Rate Limiting** on payment and generation endpoints.
+- Implemented **Retry Policies** for transient failures and external service communication.
+- Logged payment events and webhook activities for auditing and troubleshooting.
+- Added safeguards against abuse, duplicated requests, and quota exhaustion.
 
 ### 🚀 Performance Optimization
 
@@ -359,6 +380,19 @@ The project includes a public-facing website where organizations can:
 - Prevented abuse and excessive request traffic.
 
 ---
+# 💰 Monetization & Commercial Services
+
+Strike Defender is designed not only as a cybersecurity platform but also as a commercial security service.
+
+Organizations can:
+
+- Purchase Firewall Protection Packages
+- Subscribe to Security Monitoring Services
+- Access AI-Powered Threat Intelligence
+- Request Security Assessments
+- Manage Active Security Subscriptions
+
+The platform integrates secure payment processing through Paymob and supports automated subscription activation through webhook-driven workflows.
 
 # 📷 System Screenshots
 
@@ -370,7 +404,8 @@ The project includes a public-facing website where organizations can:
 
 ## 🚀 Platform Features
 
-<img src="docs/images/features.png" width="100%" />
+<img src="docs/images/featues.png" width="100%" />
+
 
 ---
 
