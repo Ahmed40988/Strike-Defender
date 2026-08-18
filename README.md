@@ -465,11 +465,26 @@ Graduation Project 2026
 
 ---
 
-# 👨‍💻 Team
+# 👨‍💻 Strike Defender Team
 
-Backend Developer: **Ahmed Momtaz**
+- **Ahmed Momtaz** — Backend Developer
+- **Ahmed Abdalla** — Frontend Developer
+- **Ahmed Kamal** — Cybersecurity Engineer
+- **Zeyad Mahmoud** — Cybersecurity Engineer
+- **Ahmed Saber** — AI Engineer
+- **Abdelrhman Khalil** — AI Engineer
 
 ---
+
+### Project Domains
+
+🖥️ Backend: Ahmed Momtaz
+
+🎨 Frontend: Ahmed Abdalla
+
+🔐 Cybersecurity: Ahmed Kamal, Zeyad Mahmoud
+
+🤖 Artificial Intelligence: Ahmed Saber, Abdelrhman Khalil
 
 # 📄 License
 
